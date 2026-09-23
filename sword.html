@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sword Training</title>
+<meta name="theme-color" content="#1D2124" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F2ECDD" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sword Training">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main id="home" class="screen">
+  <nav class="top-nav">
+    <a class="nav-item" href="index.html">Conditioning</a>
+    <span class="nav-item active">Sword Training</span>
+  </nav>
+  <div class="home-head">
+    <h1>Sword Training</h1>
+    <p>German longsword basics in the Liechtenauer tradition. Work through the sessions in order, one or two a week in place of a conditioning day, and move on once each one feels comfortable.</p>
+    <div class="week-count" id="weekCount"></div>
+  </div>
+  <details class="safety">
+    <summary>Before you start</summary>
+    <ul>
+      <li>Train outside or somewhere with clear space of two sword lengths all round, and nothing overhead.</li>
+      <li>Check your sword before each session for cracks, a loose pommel, or a wobbly crossguard.</li>
+      <li>Use a synthetic or wooden sword on the dummy. Save steel for cutting in the air.</li>
+      <li>Stop if your wrists, elbows or shoulders start to hurt. Soreness the next day is fine, sharp pain isn't.</li>
+      <li>Written for a right-hander. If you're left-handed, mirror everything.</li>
+    </ul>
+  </details>
+  <div class="day-list" id="dayList"></div>
+</main>
+
+<main id="preview" class="screen" hidden>
+  <button class="back-btn" id="pvBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Sessions</button>
+  <h1 class="pv-title" id="pvTitle"></h1>
+  <div class="pv-meta" id="pvMeta"></div>
+  <p class="rationale" id="pvWhy"></p>
+  <div id="pvList"></div>
+  <div class="start-bar" id="pvStartBar"><button class="start-btn" id="pvStart">Start session</button></div>
+</main>
+
+<section id="player" class="player" hidden aria-live="polite">
+  <div class="p-top">
+    <button class="icon-btn" id="pClose" aria-label="End workout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="p-count" id="pCount"></div>
+    <button class="how-btn" id="pHow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>How to</button>
+  </div>
+  <div class="p-bar"><div class="p-bar-fill" id="pBar"></div></div>
+  <div class="p-main">
+    <div class="p-phase" id="pPhase"></div>
+    <h2 class="p-name" id="pName"></h2>
+    <div class="p-set" id="pSet"></div>
+    <div class="ring-wrap">
+      <svg class="ring" viewBox="0 0 240 240" aria-hidden="true">
+        <circle class="ring-bg" cx="120" cy="120" r="108"/>
+        <circle class="ring-fg" id="ringFg" cx="120" cy="120" r="108"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-big" id="pBig"></div>
+        <div class="ring-small" id="pSmall"></div>
+      </div>
+    </div>
+    <p class="p-cue" id="pCue"></p>
+  </div>
+  <div class="p-controls">
+    <button class="ctl" id="pPrev" aria-label="Previous step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5L9 12l10 7V5zM5 5v14"/></svg></button>
+    <button class="ctl-main" id="pMain"></button>
+    <button class="ctl" id="pSkip" aria-label="Skip step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l10 7-10 7V5zM19 5v14"/></svg></button>
+  </div>
+  <div class="p-extra" id="pExtra"><button class="pill" id="pAdd">Add 15s</button></div>
+</section>
+
+<main id="done" class="screen" hidden>
+  <div class="done-wrap">
+    <div class="done-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+    <h1 id="doneTitle">Workout complete</h1>
+    <p id="doneText"></p>
+    <button class="start-btn" id="doneBack">Back to sessions</button>
+  </div>
+</main>
+
+<div class="overlay" id="howto" hidden>
+  <div class="backdrop" data-close="howto"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="htName">
+    <div class="sheet-head">
+      <h2 id="htName"></h2>
+      <button class="icon-btn" data-close="howto" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="fig-row" id="htFig" hidden></div>
+    <h3>How to do it</h3>
+    <ol id="htSteps"></ol>
+    <h3>Watch out for</h3>
+    <ul id="htTips"></ul>
+    <a class="demo-link" id="htLink" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Watch a demo on YouTube</a>
+  </div>
+</div>
+
+<div class="overlay" id="confirm" hidden>
+  <div class="backdrop" data-close="confirm"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="cfTitle">
+    <h2 id="cfTitle" style="font-size:1.3rem">End this workout?</h2>
+    <p style="color:var(--muted);margin:8px 0 0">Your progress in this session won't be saved.</p>
+    <div class="confirm-actions">
+      <button class="btn-quiet" data-close="confirm">Keep going</button>
+      <button class="btn-danger" id="cfEnd">End workout</button>
+    </div>
+  </div>
+</div>
+
+<script src="sword.js"></script>
+<script src="figures.js"></script>
+<script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
