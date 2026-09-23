@@ -2,22 +2,23 @@
   Offline support. Bump CACHE_VERSION whenever you change files, and add any
   new page (for example sword.html) to APP_FILES so it works offline too.
 */
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v5";
 const CACHE = "longsword-prep-" + CACHE_VERSION;
 const APP_FILES = [
   "./",
   "./index.html",
-  "./sword.html",
-  "./style.css",
-  "./workouts.js",
-  "./sword.js",
-  "./figures.js",
-  "./app.js",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png"
 ];
+/*
+  Conditioning and sword training are now one page (index.html), with
+  everything else inlined into it, so this list is shorter than before.
+  sword.html, style.css, and the old workouts.js/sword.js/figures.js/app.js
+  files are no longer used, but you can leave them in the repository;
+  nothing links to them anymore.
+*/
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(APP_FILES)).then(() => self.skipWaiting()));

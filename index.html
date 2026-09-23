@@ -4,48 +4,367 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Longsword Prep</title>
-<meta name="theme-color" content="#1D2124" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F2ECDD" media="(prefers-color-scheme: light)">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Longsword Prep">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#1D2124;--panel:#262B2F;--panel-alt:#2E343A;--line:#3A4147;
+  --steel:#8CA0AD;--steel-dim:#62707B;--ember:#C4622E;--ember-dim:#8F491F;
+  --ember-glow:rgba(196,98,46,.18);--parchment:#EFE8DA;--muted:#A2A9AC;--focus:#D9A15C;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#F2ECDD;--panel:#FFFCF5;--panel-alt:#EFE6D2;--line:#DED3B8;
+    --steel:#56636B;--steel-dim:#7C8890;--ember:#A8481E;--ember-dim:#C4622E;
+    --ember-glow:rgba(168,72,30,.12);--parchment:#262421;--muted:#5B564C;--focus:#A8481E;
+    color-scheme:light;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1D2124;--panel:#262B2F;--panel-alt:#2E343A;--line:#3A4147;
+  --steel:#8CA0AD;--steel-dim:#62707B;--ember:#C4622E;--ember-dim:#8F491F;
+  --ember-glow:rgba(196,98,46,.18);--parchment:#EFE8DA;--muted:#A2A9AC;--focus:#D9A15C;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--parchment);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;letter-spacing:-.01em;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.screen{max-width:560px;margin:0 auto;padding:20px 18px 120px}
+.top-nav{display:flex;gap:6px;margin-bottom:16px}
+.nav-item{flex:1;text-align:center;padding:9px 10px;border-radius:10px;font-size:.85rem;font-weight:600;text-decoration:none;color:var(--muted);background:var(--panel);border:1px solid var(--line)}
+.nav-item.active{color:var(--parchment);background:var(--ember-glow);border-color:var(--ember-dim)}
+.home-head{padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.home-head h1{font-size:1.9rem;line-height:1.1}
+.home-head p{margin:8px 0 0;color:var(--muted);font-size:.95rem;max-width:44ch}
+.week-count{margin-top:12px;font-size:.88rem;color:var(--steel)}
+
+.day-list{display:flex;flex-direction:column;gap:8px}
+.day-card{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.day-card.today{border-color:var(--ember-dim);background:linear-gradient(90deg,var(--ember-glow),var(--panel) 60%)}
+.dc-day{font-family:"Fraunces",Georgia,serif;font-size:1.05rem;width:40px;color:var(--steel);flex:0 0 auto}
+.day-card.today .dc-day{color:var(--ember)}
+.dc-body{flex:1 1 auto;min-width:0}
+.dc-focus{font-weight:600}
+.dc-meta{color:var(--muted);font-size:.85rem}
+.dc-status{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center}
+.dc-status.done{background:var(--ember);border-color:var(--ember)}
+.dc-status svg{width:14px;height:14px}
+
+.back-btn{background:none;border:none;color:var(--steel);padding:6px 0;margin-bottom:10px;display:inline-flex;align-items:center;gap:6px;font-size:.95rem}
+.back-btn svg{width:18px;height:18px}
+.pv-title{font-size:1.7rem;line-height:1.15}
+.pv-meta{color:var(--muted);font-size:.9rem;margin-top:4px}
+.rationale{color:var(--steel);font-size:.93rem;margin:14px 0 10px;padding-left:12px;border-left:2px solid var(--line)}
+.plan-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.plan-item:first-child{border-top:none}
+.pi-body{flex:1 1 auto;min-width:0}
+.pi-name{font-weight:600}
+.pi-scheme{color:var(--ember);font-size:.87rem;font-variant-numeric:tabular-nums}
+.pi-opt{color:var(--muted);font-size:.8rem;margin-left:6px;font-weight:400}
+.how-btn{flex:0 0 auto;background:var(--panel-alt);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-size:.82rem;color:var(--parchment);display:inline-flex;align-items:center;gap:6px}
+.how-btn svg{width:14px;height:14px}
+.rest-msg{color:var(--muted);line-height:1.6}
+
+.start-bar{position:fixed;left:0;right:0;bottom:0;padding:24px 18px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,transparent,var(--bg) 35%)}
+.start-btn{display:block;width:100%;max-width:524px;margin:0 auto;background:var(--ember);color:#fff;border:none;border-radius:14px;padding:16px;font-size:1.05rem;font-weight:600}
+
+.player{position:fixed;inset:0;z-index:10;background:var(--bg);display:flex;flex-direction:column;padding:calc(12px + env(safe-area-inset-top,0px)) 18px calc(20px + env(safe-area-inset-bottom,0px));overflow-y:auto}
+.p-top{display:flex;align-items:center;gap:12px;max-width:560px;width:100%;margin:0 auto}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.icon-btn svg{width:18px;height:18px}
+.p-count{flex:1;text-align:center;color:var(--muted);font-size:.88rem;font-variant-numeric:tabular-nums}
+.p-bar{max-width:560px;width:100%;margin:12px auto 0;height:4px;background:var(--panel-alt);border-radius:2px;overflow:hidden}
+.p-bar-fill{height:100%;background:var(--ember);width:0;transition:width .25s ease}
+.p-main{flex:1 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:520px;width:100%;margin:0 auto;padding:16px 0}
+.p-phase{font-size:.9rem;color:var(--ember);font-weight:600}
+.is-rest .p-phase{color:var(--steel)}
+.p-name{font-size:clamp(1.6rem,7vw,2.1rem);line-height:1.15;margin-top:4px}
+.p-set{color:var(--muted);font-size:.95rem;margin-top:4px;min-height:1.5em}
+.ring-wrap{position:relative;width:min(64vw,260px);aspect-ratio:1/1;margin:20px 0 14px}
+.ring{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--panel-alt);stroke-width:12}
+.ring-fg{fill:none;stroke:var(--ember);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset .22s linear}
+.is-rest .ring-fg{stroke:var(--steel)}
+.is-reps .ring-fg{stroke:var(--ember-dim);opacity:.55}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px}
+.ring-big{font-family:"Fraunces",Georgia,serif;font-size:clamp(2.8rem,13vw,3.8rem);line-height:1;font-variant-numeric:tabular-nums}
+.ring-big.reps{font-size:clamp(1.5rem,7.5vw,2.1rem);line-height:1.15}
+.ring-small{color:var(--muted);font-size:.9rem;margin-top:8px;font-variant-numeric:tabular-nums}
+.p-cue{color:var(--steel);font-size:.93rem;max-width:36ch;margin:0 0 4px;min-height:1.5em}
+.p-controls{display:flex;align-items:center;justify-content:center;gap:20px;padding-top:8px}
+.ctl{width:54px;height:54px;border-radius:50%;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.ctl svg{width:22px;height:22px}
+.ctl-main{min-width:150px;height:62px;border-radius:31px;background:var(--ember);color:#fff;border:none;font-size:1.05rem;font-weight:600;padding:0 26px;display:flex;align-items:center;justify-content:center;gap:8px}
+.ctl-main svg{width:20px;height:20px}
+.is-rest .ctl-main{background:var(--steel);color:var(--bg)}
+.p-extra{display:flex;justify-content:center;margin-top:14px;min-height:38px}
+.pill{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:7px 16px;font-size:.88rem}
+
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+.sheet{position:relative;background:var(--panel);width:100%;max-width:560px;max-height:86%;overflow-y:auto;border-radius:18px 18px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px));animation:up .2s ease}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.sheet{animation:none}.p-bar-fill,.ring-fg{transition:none}}
+.sheet-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.sheet-head h2{flex:1;font-size:1.35rem}
+.sheet h3{font-size:.98rem;margin:16px 0 6px;color:var(--steel)}
+.sheet ol,.sheet ul{margin:0;padding-left:1.3em}
+.sheet li{margin-bottom:6px;line-height:1.5}
+.fig-row{display:flex;align-items:center;gap:6px;background:var(--panel-alt);border:1px solid var(--line);border-radius:14px;padding:10px 8px 8px;margin:4px 0 6px;
+  --fig:var(--parchment);--fig-db:var(--ember);--fig-prop:var(--steel-dim);--fig-blade:var(--steel);--fig-ground:var(--line);--fig-bg:var(--panel-alt)}
+.fig-row figure{flex:1 1 0;margin:0;text-align:center;min-width:0}
+.fig-row svg{display:block;width:100%;height:auto;max-height:150px}
+.fig-row figcaption{font-size:.8rem;color:var(--muted);margin-top:2px;line-height:1.35}
+.fig-row .fig-step{flex:0 0 auto;color:var(--steel-dim);width:16px;height:16px;margin-bottom:22px}
+.fig-row.single figure{flex:0 1 60%}
+.fig-row.single{justify-content:center}
+.demo-link{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;padding:13px;border-radius:12px;background:var(--panel-alt);border:1px solid var(--line);color:var(--parchment);text-decoration:none;font-weight:600}
+.demo-link svg{width:18px;height:18px;color:var(--ember)}
+.confirm-actions{display:flex;gap:10px;margin-top:18px}
+.confirm-actions button{flex:1;padding:14px;border-radius:12px;font-weight:600}
+.btn-quiet{background:var(--panel-alt);border:1px solid var(--line)}
+.btn-danger{background:var(--ember);border:none;color:#fff}
+
+.done-wrap{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.done-mark{width:84px;height:84px;border-radius:50%;background:var(--ember);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.done-mark svg{width:42px;height:42px}
+.done-wrap h1{font-size:2rem}
+.done-wrap p{color:var(--muted);max-width:34ch}
+.done-wrap .start-btn{max-width:320px;margin-top:22px}
+
+.safety{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:14px}
+.safety summary{font-weight:600;cursor:pointer;color:var(--ember)}
+.safety ul{margin:10px 0 2px;padding-left:1.2em;color:var(--muted);font-size:.9rem}
+.safety li{margin-bottom:6px}
+
+.tabs{display:flex;gap:6px;margin-bottom:18px}
+.tab-btn{flex:1;padding:9px 6px;border-radius:10px;font-size:.85rem;font-weight:600;color:var(--muted);background:var(--panel);border:1px solid var(--line)}
+.tab-btn[aria-selected="true"]{color:var(--parchment);background:var(--ember-glow);border-color:var(--ember-dim)}
+.wk-head{padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.wk-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wk-head h1{font-size:2rem;line-height:1.1}
+.wk-dates{color:var(--muted);font-size:.92rem;margin:6px 0 0}
+.phase-chip{display:inline-block;font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid var(--line);color:var(--steel);background:var(--panel)}
+.phase-chip.p1,.phase-chip.p2{color:var(--ember);border-color:var(--ember-dim);background:var(--ember-glow)}
+.banner{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--steel);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.banner.win{border-left-color:var(--ember);background:linear-gradient(90deg,var(--ember-glow),var(--panel) 70%)}
+.bn-title{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.1rem}
+.bn-text{color:var(--muted);font-size:.92rem;margin:4px 0 10px}
+.pill.ember{background:var(--ember);border-color:var(--ember);color:#fff;font-weight:600}
+.day-card.st-missed{opacity:.55}
+.day-card.st-pre{opacity:.4}
+.day-card.st-today{border-color:var(--ember-dim);background:linear-gradient(90deg,var(--ember-glow),var(--panel) 60%)}
+.day-card.st-today .dc-day{color:var(--ember)}
+.day-card.is-rest .dc-focus{color:var(--muted);font-weight:500}
+.sword-tag{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:.75rem;color:var(--ember);vertical-align:1px}
+.sword-tag svg{width:12px;height:12px}
+.week-count{margin-top:14px;color:var(--steel);font-size:.88rem;text-align:center}
+.group-h{font-size:1.15rem;margin:18px 0 10px;color:var(--steel)}
+.link-btn{background:none;border:none;color:var(--steel);text-decoration:underline;text-underline-offset:3px;padding:14px 0 4px;font-size:.92rem;display:block;margin:0 auto}
+.pv-title{margin-top:2px}
+
+.track{display:flex;flex-direction:column;gap:0;margin:4px 0 8px;padding-left:4px}
+.tr-step{display:flex;gap:12px;position:relative;padding-bottom:16px}
+.tr-step:not(:last-child)::before{content:"";position:absolute;left:6px;top:16px;bottom:0;width:2px;background:var(--line)}
+.tr-dot{flex:0 0 auto;width:14px;height:14px;border-radius:50%;border:2px solid var(--steel-dim);background:var(--bg);margin-top:4px;position:relative;z-index:1}
+.tr-step.past .tr-dot{background:var(--steel);border-color:var(--steel)}
+.tr-step.now .tr-dot{background:var(--ember);border-color:var(--ember);box-shadow:0 0 0 4px var(--ember-glow)}
+.tr-name{font-weight:600}
+.tr-step.next .tr-name{color:var(--muted)}
+.tr-desc{color:var(--muted);font-size:.88rem}
+.pg-streak{color:var(--steel);font-size:.92rem;margin:0 0 14px}
+.safety p{color:var(--muted);font-size:.9rem;margin:10px 0 0}
+
+.cal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 10px 6px;margin:14px 0 10px;overflow-x:auto}
+.cal-row{display:grid;grid-template-columns:28px repeat(7,1fr) 40px;align-items:center;gap:4px;padding:4px 0;min-width:300px}
+.cal-row.cur{background:var(--ember-glow);border-radius:10px}
+.cal-row.fut{opacity:.55}
+.cal-head span{text-align:center;font-size:.75rem;color:var(--muted);font-weight:600}
+.cal-w{font-size:.8rem;color:var(--steel);text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+.cal-c{justify-self:center;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line);font-style:normal;font-size:.7rem;color:#fff}
+.cal-c svg{width:13px;height:13px}
+.c-done{background:var(--ember);border-color:var(--ember)}
+.c-missed{border-style:dashed;border-color:var(--steel-dim);opacity:.7}
+.c-today{border-color:var(--ember);border-width:2px}
+.c-future{border-color:var(--line)}
+.c-sword:not(.c-done){color:var(--ember)}
+.c-rest,.c-pre{border:none;background:none;position:relative}
+.c-rest::after,.c-pre::after{content:"";width:8px;height:2px;border-radius:1px;background:var(--steel-dim)}
+.c-rest.c-done::after{display:none}
+.cal-r{font-size:.78rem;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.cal-r.good{color:var(--ember);font-weight:600}
+.cal-r.dim{opacity:.6}
+.cal-mark{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--ember);padding:8px 4px 2px}
+.cal-mark.p0{color:var(--steel)}
+.cal-mark svg{width:13px;height:13px}
+.legend{display:flex;flex-wrap:wrap;gap:12px 16px;color:var(--muted);font-size:.82rem;margin-bottom:16px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .cal-c{width:18px;height:18px;font-size:.6rem}
+.legend .cal-c svg{width:10px}
+.settings-btn{display:block;margin:0 auto}
+
+.sheet-title{font-size:1.4rem;margin-bottom:4px}
+.ci-sub{color:var(--muted);margin:0 0 14px}
+.ci-q{margin-bottom:18px}
+.ci-label{font-weight:600;margin-bottom:8px}
+.stars{display:flex;gap:6px}
+.star{width:46px;height:46px;border-radius:12px;background:var(--panel-alt);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:0}
+.star svg{width:26px;height:26px;fill:none;stroke:var(--steel-dim);stroke-width:1.6;stroke-linejoin:round}
+.star.on svg{fill:var(--ember);stroke:var(--ember)}
+.ci-ends{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin-top:6px;max-width:262px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-width:84px;padding:11px 10px;border-radius:10px;background:var(--panel-alt);border:1px solid var(--line);font-weight:600;font-size:.9rem}
+.seg button[aria-pressed="true"]{background:var(--ember-glow);border-color:var(--ember);color:var(--ember)}
+#ciSave:disabled{opacity:.45;cursor:not-allowed}
+.ci-score{font-family:"Fraunces",Georgia,serif;font-size:3rem;line-height:1;margin:6px 0 10px;color:var(--ember)}
+.ci-score span{font-size:2rem;margin-left:4px}
+.set-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.set-row>div{flex:1}
+.set-block{padding:14px 0;border-bottom:1px solid var(--line)}
+.set-block:last-child{border-bottom:none}
+.set-name{font-weight:600}
+.set-desc{color:var(--muted);font-size:.86rem;margin:2px 0 10px}
+.set-row .set-desc{margin-bottom:0}
+.toggle{flex:0 0 auto;width:50px;height:30px;border-radius:15px;background:var(--panel-alt);border:1px solid var(--line);position:relative;padding:0}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--steel-dim);transition:transform .15s ease}
+.toggle[aria-checked="true"]{background:var(--ember);border-color:var(--ember)}
+.toggle[aria-checked="true"]::after{transform:translateX(20px);background:#fff}
+.btn-outline{background:none;border:1px solid var(--ember-dim);color:var(--ember);border-radius:10px;padding:11px 16px;font-weight:600}
+@media (prefers-reduced-motion: reduce){.toggle::after{transition:none}}
+
+.br-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px 16px;margin:16px 0 6px}
+.br-card .set-row.last{border-bottom:none}
+.br-novoice{color:var(--muted);font-size:.9rem;padding:12px 0;margin:0;border-bottom:1px solid var(--line)}
+.br-list{list-style:none;margin:0;padding:0;counter-reset:br}
+.br-list li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);counter-increment:br}
+.br-list li:first-child{border-top:none}
+.br-list li span:first-child::before{content:counter(br)". ";color:var(--steel-dim);font-variant-numeric:tabular-nums}
+.br-s{color:var(--ember);font-size:.87rem;text-align:right;flex:0 0 auto;font-variant-numeric:tabular-nums}
+#pVoice[aria-pressed="false"]{color:var(--steel-dim)}
+.p-top .how-btn{margin-left:4px}
+
+.time-input{margin-top:8px;background:var(--panel-alt);border:1px solid var(--line);color:var(--parchment);border-radius:10px;padding:10px 12px;font-size:1rem;font-family:inherit;width:140px}
+.time-input::-webkit-calendar-picker-indicator{filter:invert(0.6)}
+</style>
 </head>
 <body>
-
 <main id="home" class="screen">
-  <nav class="top-nav">
-    <span class="nav-item active">Conditioning</span>
-    <a class="nav-item" href="sword.html">Sword Training</a>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab-btn" role="tab" data-tab="week">This week</button>
+    <button class="tab-btn" role="tab" data-tab="progress">Progress</button>
+    <button class="tab-btn" role="tab" data-tab="all">All sessions</button>
   </nav>
-  <div class="home-head">
-    <h1>Longsword Prep</h1>
-    <p>Home conditioning for grip, rotation, legs, and stamina. Pick a day, press start, and follow along.</p>
+
+  <section id="tab-week">
+    <div class="wk-head">
+      <div class="wk-top"><h1 id="wkTitle">Week 1</h1><span id="wkPhase"></span></div>
+      <div class="wk-dates" id="wkDates"></div>
+    </div>
+    <div id="wkBanners"></div>
+    <div class="day-list" id="dayList"></div>
     <div class="week-count" id="weekCount"></div>
-  </div>
-  <div class="day-list" id="dayList"></div>
+  </section>
+
+  <section id="tab-progress" hidden>
+    <div class="wk-head">
+      <h1>Progress</h1>
+      <div class="wk-dates" id="pgSub"></div>
+    </div>
+    <div class="track" id="pgTrack"></div>
+    <p class="pg-streak" id="pgStreak"></p>
+    <details class="safety">
+      <summary>How moving up works</summary>
+      <p>At the end of each week, you rate how the sessions felt and how your body is coping. Your score is the average of those two ratings.</p>
+      <p>Two weeks in a row at 4.5 stars or more moves you up a phase, as long as you did at least 5 of the week's sessions and had no sharp or joint pain.</p>
+      <p>Swords can come in from week 5 at the earliest, and phase 2 needs at least 3 weeks of phase 1 first. You can also change phase yourself in Settings.</p>
+    </details>
+    <div class="cal" id="pgCal" aria-label="Training calendar"></div>
+    <div class="legend">
+      <span><i class="cal-c c-done">✓</i>Done</span>
+      <span><i class="cal-c c-missed"></i>Missed</span>
+      <span><i class="cal-c c-future c-sword"></i>Sword day</span>
+      <span><i class="cal-c c-rest"></i>Rest</span>
+    </div>
+    <button class="pill settings-btn" id="openSettings">Settings</button>
+  </section>
+
+  <section id="tab-all" hidden>
+    <div class="wk-head">
+      <h1>All sessions</h1>
+      <p class="wk-dates">Run any session whenever you like. If it's the one planned for today, it ticks today off.</p>
+    </div>
+    <h2 class="group-h">Conditioning</h2>
+    <div class="day-list" id="allCond"></div>
+    <h2 class="group-h">Sword training</h2>
+    <details class="safety">
+      <summary>Before you pick up a sword</summary>
+      <ul>
+        <li>Train outside or somewhere with clear space of two sword lengths all round, and nothing overhead.</li>
+        <li>Check your sword before each session for cracks, a loose pommel, or a wobbly crossguard.</li>
+        <li>Use a synthetic or wooden sword on the dummy. Save steel for cutting in the air.</li>
+        <li>Stop if your wrists, elbows or shoulders start to hurt. Soreness the next day is fine, sharp pain isn't.</li>
+        <li>Written for a right-hander. If you're left-handed, mirror everything.</li>
+      </ul>
+    </details>
+    <div class="day-list" id="allSword"></div>
+  </section>
 </main>
 
 <main id="preview" class="screen" hidden>
-  <button class="back-btn" id="pvBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Week</button>
+  <button class="back-btn" id="pvBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button>
   <h1 class="pv-title" id="pvTitle"></h1>
   <div class="pv-meta" id="pvMeta"></div>
   <p class="rationale" id="pvWhy"></p>
+  <details class="safety" id="pvSafety" hidden>
+    <summary>Safety check</summary>
+    <ul>
+      <li>Clear space of two sword lengths all round, nothing overhead.</li>
+      <li>Sword checked: no cracks, pommel and crossguard tight.</li>
+      <li>Synthetic or wooden sword for any dummy work.</li>
+    </ul>
+  </details>
   <div id="pvList"></div>
-  <div class="start-bar" id="pvStartBar"><button class="start-btn" id="pvStart">Start workout</button></div>
+  <button class="link-btn" id="pvMark" hidden></button>
+  <div class="start-bar" id="pvStartBar"><button class="start-btn" id="pvStart">Start session</button></div>
 </main>
 
+<main id="brief" class="screen" hidden>
+  <button class="back-btn" id="brBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button>
+  <h1 class="pv-title" id="brTitle"></h1>
+  <div class="pv-meta" id="brMeta"></div>
+  <div class="br-card">
+    <div id="brVoiceRow">
+      <div class="set-row">
+        <div><div class="set-name">Voice guide</div><div class="set-desc">Talks you through each exercise, rest, and countdown.</div></div>
+        <button class="toggle" id="brVoice" role="switch" aria-checked="true" aria-label="Voice guide"></button>
+      </div>
+    </div>
+    <p class="br-novoice" id="brNoVoice" hidden>The voice guide isn't available in this browser. Open the app in Chrome to use it.</p>
+    <div class="set-row last">
+      <div><div class="set-name">Hands-free reps</div><div class="set-desc">Times each rep set for you so it moves on by itself. You can still tap Done early.</div></div>
+      <button class="toggle" id="brHands" role="switch" aria-checked="true" aria-label="Hands-free reps"></button>
+    </div>
+  </div>
+  <h2 class="group-h">What's coming</h2>
+  <ol class="br-list" id="brList"></ol>
+  <div class="start-bar"><button class="start-btn" id="brBegin">Begin</button></div>
+</main>
 <section id="player" class="player" hidden aria-live="polite">
   <div class="p-top">
     <button class="icon-btn" id="pClose" aria-label="End workout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="p-count" id="pCount"></div>
+    <button class="icon-btn" id="pVoice" aria-label="Mute voice guide"></button>
     <button class="how-btn" id="pHow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>How to</button>
   </div>
   <div class="p-bar"><div class="p-bar-fill" id="pBar"></div></div>
@@ -79,6 +398,7 @@
     <h1 id="doneTitle">Workout complete</h1>
     <p id="doneText"></p>
     <button class="start-btn" id="doneBack">Back to the week</button>
+    <button class="pill ember" id="doneCheckin" hidden style="margin-top:12px">Do your weekly check-in</button>
   </div>
 </main>
 
@@ -110,15 +430,1417 @@
   </div>
 </div>
 
-<script src="workouts.js"></script>
-<script src="figures.js"></script>
-<script src="app.js"></script>
+
+<div class="overlay" id="checkin" hidden>
+  <div class="backdrop" data-close="checkin"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ciTitle">
+    <div id="ciForm">
+      <h2 id="ciTitle" class="sheet-title"></h2>
+      <p class="ci-sub" id="ciSub"></p>
+      <div class="ci-q">
+        <div class="ci-label">How did this week's sessions feel?</div>
+        <div class="stars" id="ciStars1"></div>
+        <div class="ci-ends"><span>Really tough</span><span>Comfortable</span></div>
+      </div>
+      <div class="ci-q">
+        <div class="ci-label" id="ciQ2"></div>
+        <div class="stars" id="ciStars2"></div>
+        <div class="ci-ends"><span id="ciQ2lo"></span><span id="ciQ2hi"></span></div>
+      </div>
+      <div class="ci-q">
+        <div class="ci-label">Any sharp or joint pain this week? Normal muscle soreness doesn't count.</div>
+        <div class="seg" id="ciPain"><button data-pain="0">No</button><button data-pain="1">Yes</button></div>
+      </div>
+      <button class="start-btn" id="ciSave" disabled>Save check-in</button>
+      <button class="link-btn" id="ciSkip">Skip this week</button>
+    </div>
+    <div id="ciResult" hidden>
+      <div class="ci-score" id="ciScore"></div>
+      <h2 class="sheet-title" id="ciResTitle"></h2>
+      <p class="ci-sub" id="ciResText"></p>
+      <button class="start-btn" id="ciDone">Done</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="settings" hidden>
+  <div class="backdrop" data-close="settings"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="sheet-head">
+      <h2 id="setTitle">Settings</h2>
+      <button class="icon-btn" data-close="settings" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="set-row">
+      <div><div class="set-name">Training dummy built</div><div class="set-desc">Adds the dummy session to the phase 2 rotation.</div></div>
+      <button class="toggle" id="setDummy" role="switch" aria-checked="false" aria-label="Training dummy built"></button>
+    </div>
+    <div class="set-row">
+      <div><div class="set-name">Daily reminder</div><div class="set-desc" id="remDesc">Sends a notification at the same time every day.</div></div>
+      <button class="toggle" id="setReminder" role="switch" aria-checked="false" aria-label="Daily reminder"></button>
+    </div>
+    <div class="set-block" id="remTimeBlock" hidden>
+      <div class="set-name">Reminder time</div>
+      <input type="time" id="remTime" class="time-input">
+    </div>
+    <div class="set-block">
+      <div class="set-name">Phase</div>
+      <div class="set-desc">Switches your schedule from this week. The weekly check-in normally does this for you.</div>
+      <div class="seg" id="setPhase"><button data-p="0">Conditioning</button><button data-p="1">Sword 1</button><button data-p="2">Sword 2</button></div>
+    </div>
+    <div class="set-block">
+      <div class="set-name">Start again</div>
+      <div class="set-desc">Clears every tick and check-in, and makes this week week 1.</div>
+      <button class="btn-outline" id="setReset">Restart from week 1</button>
+    </div>
+  </div>
+</div>
 <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("./sw.js").catch(function () {});
+(function(){
+"use strict";
+/*
+  Workout content lives here.
+  LIB  = every exercise: name, YouTube search terms (q), form steps, and tips.
+  DAYS = the weekly plan. Each plan item points at a LIB key and gives
+         sets, reps (text) or time (seconds), rest (seconds between sets),
+         and after (seconds before the next exercise, default 30).
+  Edit freely; the app rebuilds itself from this data.
+*/
+/* ---------- Exercise library ---------- */
+var COND_LIB = {
+  warm_legs:{name:"Warm-up",q:"leg swings hip circles warm up",
+    steps:["Easy crosstrainer for about 4 minutes, just enough to get warm.","10 leg swings per leg, front to back, holding something for balance.","10 hip circles in each direction."],
+    tips:["This should feel easy. Save your effort for the main work."]},
+  warm_upper:{name:"Warm-up",q:"arm circles shoulder warm up",
+    steps:["Easy crosstrainer for about 4 minutes.","10 arm circles forwards, then 10 backwards.","10 slow shoulder rolls in each direction."],
+    tips:["Start the arm circles small and let them get bigger."]},
+  warm_row:{name:"Warm-up row",q:"rowing machine technique beginner",
+    steps:["Row at a very easy pace.","On each stroke: push with the legs, lean back slightly, then pull the handle to your lower ribs.","Return in reverse: arms out, body forward, then bend the knees."],
+    tips:["Most of the power comes from the legs, not the arms.","Don't hunch over at the front of the stroke."]},
+  warm_rotation:{name:"Warm-up",q:"standing torso twist warm up",
+    steps:["Easy row for about 4 minutes.","10 standing torso twists each side, arms loose.","10 arm circles in each direction."],
+    tips:["Let the hips turn a little with the twists rather than forcing the spine."]},
+  warm_cross:{name:"Warm-up",q:"elliptical cross trainer technique",
+    steps:["Crosstrainer at an easy, steady pace.","Stand tall and use the handles, pushing and pulling."],
+    tips:["Don't lean on the handles and let the machine carry you."]},
+
+  squat:{name:"Bodyweight squats",q:"bodyweight squat form",
+    steps:["Feet shoulder-width apart, toes turned out slightly.","Push your hips back and bend your knees, like sitting into a low chair.","Go as low as you can while keeping heels down and chest up.","Drive through your whole foot to stand back up."],
+    tips:["Knees should follow the line of your toes, not cave inwards.","Don't let your lower back round at the bottom."]},
+  bridge:{name:"Glute bridges",q:"glute bridge form",
+    steps:["Lie on your back, knees bent, feet flat and hip-width apart.","Squeeze your glutes and push your hips up until knees, hips and shoulders line up.","Hold for one second at the top.","Lower slowly."],
+    tips:["Push through your heels.","Don't arch your lower back to get extra height."]},
+  lunge:{name:"Reverse lunges",q:"reverse lunge form",
+    steps:["Stand tall, feet hip-width apart.","Step one foot back and lower until both knees are bent to about 90 degrees.","Your back knee should hover just above the floor.","Push through the front heel to return to standing."],
+    tips:["Keep your torso upright.","Hold a light dumbbell in each hand once bodyweight feels easy."]},
+  calf:{name:"Calf raises",q:"calf raise form",
+    steps:["Stand with feet hip-width apart, holding something for balance.","Rise up onto the balls of your feet as high as you can.","Pause at the top.","Lower slowly, over about 2 seconds."],
+    tips:["No bouncing at the bottom.","Doing them on a step edge gives a bigger stretch."]},
+  plank:{name:"Plank",q:"forearm plank form",
+    steps:["Forearms on the floor, elbows directly under your shoulders.","Step your feet back so your body is straight from head to heels.","Brace your stomach as if someone was about to poke it, and squeeze your glutes.","Breathe steadily and hold."],
+    tips:["Hips shouldn't sag down or pike up.","Drop to your knees if your form breaks."]},
+  side_plank:{name:"Side plank",q:"side plank form",
+    steps:["Lie on your side with your elbow under your shoulder.","Stack your feet, or stagger them for balance.","Lift your hips until your body is in a straight line.","Hold without letting your hips drop."],
+    tips:["Bending the knees and resting on them is a fine starting version."]},
+  dead_bug:{name:"Dead bug",q:"dead bug exercise form",
+    steps:["Lie on your back, arms straight up, knees bent at 90 degrees above your hips.","Press your lower back flat into the floor.","Slowly lower one arm and the opposite leg towards the floor.","Bring them back and switch sides."],
+    tips:["If your lower back lifts off the floor, don't lower as far."]},
+
+  row_steady:{name:"Steady row",q:"rowing machine steady state technique",
+    steps:["Legs push first, then lean back slightly, then pull the handle to your lower ribs.","Return in reverse: arms, then body, then legs.","Keep a smooth, steady rhythm."],
+    tips:["You should be able to hold a conversation. This is base-building, not a race.","Most of the work comes from the legs."]},
+  farmer:{name:"Farmer's carry",q:"farmers carry dumbbell form",
+    steps:["Hold a dumbbell in each hand at your sides.","Stand tall with shoulders back and down.","Walk with slow, steady steps, or march on the spot if space is tight.","Grip hard the whole time."],
+    tips:["Don't let your shoulders creep up towards your ears.","Don't lean to one side."]},
+  wrist_curl:{name:"Wrist curls",q:"dumbbell wrist curl reverse wrist curl",
+    steps:["Sit with forearms resting on your thighs, wrists just past your knees.","Palms up: let the dumbbell roll towards your fingertips, then curl your wrist up.","Do your reps, then flip palms down and lift the back of your hand towards the ceiling."],
+    tips:["Only your wrists should move, forearms stay still.","Go light. Forearm tendons are easy to irritate."]},
+  dead_hang:{name:"Dead hang",q:"dead hang form",
+    steps:["Grip a bar overhand, about shoulder-width.","Lift your feet and hang with your arms straight.","Keep your shoulders slightly engaged rather than fully slumped.","Drop down when your grip gives out."],
+    tips:["Only use a bar rated to hold your body weight.","Skip this if you don't have one. The carries already cover grip."]},
+
+  pushup:{name:"Push-ups",q:"push up form beginner",
+    steps:["Hands slightly wider than your shoulders.","Body straight from head to heels, or head to knees.","Lower your chest to just above the floor, elbows at about 45 degrees from your body.","Push back up."],
+    tips:["Knees on the floor or hands on a counter are both fine versions.","Full range beats fast half reps."]},
+  db_row:{name:"Dumbbell rows",q:"single arm dumbbell row form",
+    steps:["Put one hand and knee on a bench or sturdy chair, the other foot on the floor.","Hold the dumbbell with your arm hanging straight down.","Pull your elbow back past your ribs and squeeze your shoulder blade.","Lower slowly."],
+    tips:["Keep your back flat.","Don't twist your body to heave the weight up."]},
+  press:{name:"Shoulder press",q:"dumbbell shoulder press form",
+    steps:["Hold dumbbells at shoulder height, palms facing forward.","Brace your stomach.","Press straight up until your arms are nearly straight.","Lower back to your shoulders with control."],
+    tips:["Don't arch your lower back. Sitting down can help.","Press straight overhead, not out in front."]},
+  rear_delt:{name:"Rear delt flyes",q:"dumbbell rear delt fly form",
+    steps:["Hinge forward at the hips with a flat back and soft knees.","Let the dumbbells hang below your chest, elbows slightly bent.","Raise your arms out to the sides, squeezing your shoulder blades together.","Lower slowly."],
+    tips:["Go very light. This is a small muscle."]},
+  rev_wrist:{name:"Reverse wrist curls",q:"reverse wrist curl dumbbell",
+    steps:["Sit with forearms on your thighs, palms facing down.","Lift the back of your hand towards the ceiling.","Lower slowly."],
+    tips:["This is the motion that keeps a sword tip from wandering.","Very light weight is plenty."]},
+
+  intervals:{name:"Hard effort",q:"elliptical interval training",
+    steps:["Push hard on the crosstrainer: faster pace, higher resistance, or both.","When the timer switches to recovery, drop to an easy pace but keep moving."],
+    tips:["Hard means you couldn't hold a sentence.","Ease off if you feel dizzy or your form falls apart."]},
+
+  squat_press:{name:"Squat to press",q:"dumbbell squat to press thruster form",
+    steps:["Hold dumbbells at your shoulders.","Squat down.","Stand all the way up.","Press the dumbbells overhead, lower them to your shoulders, and repeat."],
+    tips:["Finish standing up before you press."]},
+  plank_row:{name:"Plank rows",q:"plank row renegade row form",
+    steps:["Get into a high plank on your hands, holding the dumbbells.","Set your feet wider than usual for balance.","Row one dumbbell to your ribs without letting your hips twist.","Lower it and switch sides."],
+    tips:["Wider feet make it easier.","Knees on the floor is a fine starting version."]},
+  woodchop:{name:"Standing woodchoppers",q:"dumbbell woodchopper exercise",
+    steps:["Feet shoulder-width apart, holding one dumbbell with both hands.","Start with it up above one shoulder.","Rotate your hips and torso to bring it diagonally down across your body to the opposite hip.","Return under control."],
+    tips:["Let your back foot pivot. The movement comes from the hips, just like a cut.","Don't just swing with your arms."]},
+  russian:{name:"Russian twists",q:"russian twist form",
+    steps:["Sit with knees bent and lean back slightly with a straight back.","Hold your hands together or a light dumbbell.","Rotate your torso side to side, touching the floor next to each hip."],
+    tips:["Keeping your feet on the floor is fine, and kinder on the lower back.","Rotate your ribcage, not just your arms."]},
+  bird_dog:{name:"Bird dogs",q:"bird dog exercise form",
+    steps:["Start on your hands and knees.","Reach one arm forward and the opposite leg back until both are straight.","Hold for 1 to 2 seconds.","Return and switch sides."],
+    tips:["Keep your hips level, as if balancing a cup on your lower back.","Move slowly."]},
+
+  easy_cardio:{name:"Easy row or crosstrainer",q:"low intensity steady state cardio",
+    steps:["Pick whichever machine you fancy.","Keep the pace very easy, well below Tuesday's row."],
+    tips:["You should be able to chat comfortably. It shouldn't feel like a workout."]},
+  mobility:{name:"Mobility flow",q:"full body mobility routine beginner",
+    steps:["Shoulder circles.","Cat-cow on hands and knees.","Hip openers, like deep lunges with a slight twist.","Wrist rotations.","Thoracic rotations: on hands and knees, one hand behind your head, rotate the elbow up to the ceiling.","A few slow reps of each, then repeat."],
+    tips:["Move gently. Nothing should hurt."]},
+
+  cool_legs:{name:"Cool-down stretches",q:"quad hamstring hip flexor stretch",
+    steps:["Quad stretch: 30 seconds per leg.","Hamstring stretch: 30 seconds per leg.","Hip flexor stretch in a half-kneeling lunge: 30 seconds per side."],
+    tips:["Ease into stretches, don't bounce."]},
+  cool_grip:{name:"Cool-down stretches",q:"forearm stretch wrist flexor extensor",
+    steps:["Arm out straight, palm up, gently pull your fingers back: 30 seconds each arm.","Palm down, gently pull your hand towards you: 30 seconds each arm.","Finish with slow shoulder rolls."],
+    tips:["Gentle pressure only."]},
+  cool_upper:{name:"Cool-down stretches",q:"doorway chest stretch cross body shoulder stretch",
+    steps:["Doorway chest stretch: forearms on the frame, lean gently through: 30 seconds.","Cross-body shoulder stretch: 30 seconds per arm."],
+    tips:["Keep breathing slowly."]},
+  cool_cardio:{name:"Cool-down",q:"calf stretch hip flexor stretch",
+    steps:["Easy pace on the crosstrainer for about 3 minutes.","Calf stretch against a wall: 30 seconds each leg.","Hip flexor stretch: 30 seconds each side."],
+    tips:["Let your breathing settle before you stop moving."]},
+  cool_rot:{name:"Cool-down stretches",q:"seated spinal twist childs pose",
+    steps:["Seated spinal twist: 30 to 45 seconds each side.","Child's pose: 45 seconds."],
+    tips:["Twist gently, using your breath to go a little further."]},
+  cool_full:{name:"Full-body stretch",q:"full body stretch routine",
+    steps:["Stretch whatever feels tight today.","Legs, hips, shoulders, and forearms are the usual suspects."],
+    tips:["Relax into it."]}
+};
+
+/* ---------- Weekly plan ---------- */
+var COND_DAYS = [
+  {id:"mon",short:"Mon",full:"Monday",focus:"Legs and core",
+   equipment:"Bodyweight and light dumbbells",
+   why:"Longsword guards and lunges live in the legs, and rotational core strength is what turns hip drive into an actual cut.",
+   plan:[
+    {ex:"warm_legs",time:300,after:15},
+    {ex:"squat",sets:3,reps:"12 to 15 reps",rest:60},
+    {ex:"bridge",sets:3,reps:"15 reps",rest:45},
+    {ex:"lunge",sets:3,reps:"10 each leg",rest:60},
+    {ex:"calf",sets:3,reps:"15 reps",rest:45},
+    {ex:"plank",sets:3,time:30,rest:45},
+    {ex:"side_plank",sets:2,time:20,sides:true,rest:30},
+    {ex:"dead_bug",sets:2,reps:"10 each side",rest:30},
+    {ex:"cool_legs",time:180}
+   ]},
+  {id:"tue",short:"Tue",full:"Tuesday",focus:"Rowing and grip",
+   equipment:"Rower and light dumbbells",
+   why:"Grip is usually the first thing to fail on a longsword. This trains hands and forearms directly, alongside the aerobic base that lets you last.",
+   plan:[
+    {ex:"warm_row",time:300,after:15},
+    {ex:"row_steady",time:900},
+    {ex:"farmer",sets:3,time:30,rest:60},
+    {ex:"wrist_curl",sets:3,reps:"15 each direction",rest:45},
+    {ex:"dead_hang",sets:3,reps:"Hold as long as you can",rest:60,optional:true},
+    {ex:"cool_grip",time:120}
+   ]},
+  {id:"wed",short:"Wed",full:"Wednesday",focus:"Upper body and grip",
+   equipment:"Bodyweight and light dumbbells",
+   why:"This is where holding a sword up in guard stops being exhausting. Shoulders and upper back carry that load, not the arms alone.",
+   plan:[
+    {ex:"warm_upper",time:300,after:15},
+    {ex:"pushup",sets:3,reps:"8 to 12 reps",rest:60},
+    {ex:"db_row",sets:3,reps:"12 each side",rest:60},
+    {ex:"press",sets:3,reps:"10 reps",rest:60},
+    {ex:"rear_delt",sets:3,reps:"12 reps",rest:45},
+    {ex:"rev_wrist",sets:2,reps:"15 reps",rest:45},
+    {ex:"cool_upper",time:120}
+   ]},
+  {id:"thu",short:"Thu",full:"Thursday",focus:"Intervals",
+   equipment:"Crosstrainer",
+   why:"Armoured exchanges are short, brutal bursts. This builds the engine that lets you recover quickly between them.",
+   plan:[
+    {ex:"warm_cross",time:300,after:10},
+    {ex:"intervals",sets:8,time:30,rest:90,restLabel:"Easy pace",restCue:"Keep moving at an easy pace.",after:10},
+    {ex:"cool_cardio",time:300}
+   ]},
+  {id:"fri",short:"Fri",full:"Friday",focus:"Full body and rotation",
+   equipment:"Bodyweight and light dumbbells",
+   why:"Cuts come from hip and torso rotation, not the arms. This session builds a cut rather than just a swing.",
+   plan:[
+    {ex:"warm_rotation",time:300,after:15},
+    {ex:"squat_press",sets:3,reps:"10 reps",rest:60},
+    {ex:"plank_row",sets:3,reps:"8 each side",rest:60},
+    {ex:"woodchop",sets:2,reps:"12 each side",rest:45},
+    {ex:"russian",sets:3,reps:"16 total",rest:45},
+    {ex:"bird_dog",sets:2,reps:"10 each side",rest:30},
+    {ex:"cool_rot",time:150}
+   ]},
+  {id:"sat",short:"Sat",full:"Saturday",focus:"Active recovery",
+   equipment:"Rower or crosstrainer",
+   why:"Easy movement speeds up recovery more than sitting still. This one is deliberately light.",
+   plan:[
+    {ex:"easy_cardio",time:1080,after:15},
+    {ex:"mobility",sets:2,time:180,rest:20},
+    {ex:"cool_full",time:300}
+   ]},
+  {id:"sun",short:"Sun",full:"Sunday",focus:"Rest",rest:true,
+   why:"This is where the actual adaptation happens. The week only works if you let this day be nothing.",
+   plan:[]}
+];
+/*
+  Sword training content, in the same shape as js/workouts.js.
+  LIB  = every guard, cut, and drill: name, YouTube search terms (q),
+         steps, and tips. A matching key in FIG (js/figures.js) adds a picture.
+  DAYS = the sessions. Each plan item points at a LIB key and gives
+         sets, reps (text) or time (seconds), rest (seconds between sets),
+         sides:true (do it on both sides), and after (seconds before the
+         next item, default 30).
+  Guard and cut names follow the German (Liechtenauer) tradition.
+  Directions are written for a right-hander. Left-handers mirror everything.
+*/
+/* ---------- Sword library ---------- */
+var SWORD_LIB = {
+  warm_sword:{name:"Warm-up",q:"hema warm up routine",
+    steps:["A couple of minutes of easy movement, marching or light jogging on the spot.","10 wrist circles each direction, then 10 arm circles forwards and backwards.","10 slow torso twists with loose arms, letting the hips turn.","10 slow, gentle practice cuts with the sword, just to get moving."],
+    tips:["Longsword is hard on wrists and forearms. Don't skip this."]},
+  cool_sword:{name:"Cool-down",q:"forearm wrist stretch",
+    steps:["Forearm stretch, palm up then palm down: 30 seconds each arm.","Cross-body shoulder stretch: 30 seconds each arm.","Slow shoulder rolls, then shake your hands out."],
+    tips:["Tight forearms after a session are normal. Stretching now helps the next one."]},
+
+  grip_stance:{name:"Grip and stance",q:"longsword grip and stance beginner",
+    steps:["Right hand just below the crossguard, left hand on or just above the pommel.","Grip mostly with your last three fingers, keeping the thumb and forefinger a little looser.","Feet about shoulder-width apart, left foot forward, knees soft, weight evenly split.","Stand tall and relaxed. Practise settling into this stance a few times."],
+    tips:["A death grip slows your cuts and tires your forearms fast.","Hands stay apart on the grip. The gap between them is what lets you lever the blade."]},
+
+  guard_vomtag:{name:"Vom Tag (from the roof)",q:"vom tag guard longsword",
+    steps:["Left foot forward.","Hold the sword above your head, point angled up and back, or rest it on your right shoulder. Both versions are correct.","Elbows fairly close in, not flared out wide.","On the left side, mirror it: right foot forward, sword on your left."],
+    tips:["Most descending cuts start from here.","Above the head gives a faster cut but tires the shoulders sooner, which is exactly why holding it builds endurance."]},
+  guard_ochs:{name:"Ochs (the ox)",q:"ochs guard longsword",
+    steps:["Left foot forward.","Raise the hilt beside the right side of your head, hands around temple height.","Aim the point straight at your opponent's face, like the horn of an ox.","On the left side, mirror it: right foot forward, hilt beside the left of your head."],
+    tips:["The point should stay level on target, not drift up at the sky.","Arms bent but not cramped. You should be able to thrust straight out of it."]},
+  guard_pflug:{name:"Pflug (the plough)",q:"pflug guard longsword",
+    steps:["Left foot forward.","Hold the hilt beside your right hip, pommel low.","Point angled up at your opponent's face or chest.","On the left side, mirror it: right foot forward, hilt by your left hip."],
+    tips:["Keep your back upright rather than hunching over the hilt.","If the point drops, it stops threatening anything."]},
+  guard_alber:{name:"Alber (the fool)",q:"alber guard longsword",
+    steps:["Either foot forward.","Hold the hilt low in front of you with the point angled down toward the ground.","Shoulders and arms relaxed, ready to cut upward."],
+    tips:["It's called the fool because it looks open. That's the point: it invites an attack you're ready to meet with a rising cut.","It isn't a rest position. Stay ready."]},
+  guard_flow:{name:"Guard flow",q:"liechtenauer four guards vier leger",
+    steps:["Start in Vom Tag.","Move slowly into Ochs, then Pflug, then Alber, and back up the same way.","Do a few rounds on one side, then switch your feet and do the other side."],
+    tips:["Slow and smooth. The aim is to know where your sword is without looking at it.","Keep your stance steady while the sword moves."]},
+
+  foot_step:{name:"Step forward and back",q:"hema footwork basics longsword",
+    steps:["From your stance, step the front foot forward, then bring the back foot up the same distance.","To go back, the back foot moves first and the front foot follows.","Keep the same stance width the whole time.","Keep stepping forward and back for the timer."],
+    tips:["Small, balanced steps beat big lunges.","Don't bob up and down, and don't let your feet cross or close together."]},
+  foot_pass:{name:"Passing step",q:"hema passing step footwork",
+    steps:["From your stance, bring the back foot forward past the front foot so it becomes the new front foot, like a walking step.","Let your hips turn with the step.","Pass forward a few times, then pass backwards the same way."],
+    tips:["Most longsword cuts are made with a passing step, so this is the big one to get comfortable with.","Land with your knees soft and weight balanced, ready to go again."]},
+  step_guard:{name:"Passing with a guard",q:"hema passing step pflug guard change",
+    steps:["Start in Pflug on the right, left foot forward.","Pass forward. As the right foot lands in front, move the sword across into Pflug on the left.","Pass again and change back. Then pass backwards, changing the guard each step."],
+    tips:["Rule of thumb: the hilt sits on the side of your back foot.","Keep the point aimed forward the whole time. It shouldn't wander while your feet move."]},
+
+  cut_ober:{name:"Oberhau (descending cut)",q:"oberhau longsword cut",
+    steps:["Start in Vom Tag, left foot forward.","Cut diagonally down from above your right shoulder, through where an opponent's left shoulder or neck would be.","Let the sword carry through and finish low on your left.","Reset and repeat. For the other side, mirror everything."],
+    tips:["Power comes from the hips and shoulders turning, not just the arms.","Lead with the edge. If the flat leads, the blade will wobble and slap."]},
+  cut_unter:{name:"Unterhau (rising cut)",q:"unterhau longsword cut",
+    steps:["Start low on your right, point down, like a low Alber off to the side.","Cut diagonally upward through where an opponent's arms or chin would be.","Finish high on your left, hands around head height.","Reset and repeat, then mirror it."],
+    tips:["Drive it from the legs and hips. Don't just lift the sword with your arms."]},
+  cut_mittel:{name:"Mittelhau (middle cut)",q:"mittelhau horizontal cut longsword",
+    steps:["Start with the sword by your right shoulder.","Cut horizontally across at roughly neck or chest height.","Finish on your left side with the blade still level.","Reset and repeat, then mirror it."],
+    tips:["Keep the blade level. It's easy to let it dip halfway through.","Turn the hips with it, just like the diagonal cuts."]},
+  thrust:{name:"Thrust (Stich) into Langort",q:"longsword thrust langort",
+    steps:["Start in Pflug.","Push your hands forward and slightly up so the point travels in a straight line to the target.","Finish in Langort (the long point): arms extended, sword pointing straight ahead.","Recover to Pflug and repeat."],
+    tips:["The point moves in a straight line. If you swing it, it's a cut, not a thrust.","Keep your shoulders down as your arms extend."]},
+
+  cut_zorn:{name:"Zornhau (wrath cut)",q:"zornhau longsword",
+    steps:["Start in Vom Tag, left foot forward.","Make a strong diagonal descending cut from the right, passing forward so your right foot lands in front.","Stop the cut with the point aimed at your opponent, not swinging through to the floor.","Recover and repeat, then mirror it from the left."],
+    tips:["The first of Liechtenauer's master cuts, and the basis of a lot of drills.","Get the sword moving first and let the step follow, rather than stepping and then swinging."]},
+  zorn_ort:{name:"Zornhau into a thrust",q:"zornort zornhau thrust longsword",
+    steps:["Cut a Zornhau.","Picture your opponent's sword meeting yours in the middle as it lands.","Keeping that contact, push the point straight on toward the face or chest.","Recover to guard and repeat."],
+    tips:["This one combo shows the whole idea of the German style: cut, feel the contact, then take the most direct route to the target.","Push forward from the legs, not just the arms."]},
+  cut_flow:{name:"Cutting flow",q:"longsword cutting drill solo",
+    steps:["Link four cuts without stopping: Oberhau from the right, then from the left.","Then an Unterhau from the right, then from the left.","After each cut, bring the sword round smoothly to where the next one starts.","That's one round. Start slow, and only speed up once it's smooth."],
+    tips:["Stay balanced. If you wobble, you're going too fast.","Breathe out on each cut."]},
+
+  pell_measure:{name:"Finding your distance",q:"hema measure distance drill",
+    steps:["Stand just out of reach of the dummy, in Vom Tag.","Pass forward and cut an Oberhau, so the last third of the blade lands on the head or shoulder.","Step straight back out of reach.","Adjust where you start until the step alone brings you into range."],
+    tips:["Finding your distance, called measure, matters as much as the cut itself.","If the cut lands near the crossguard, you're too close."]},
+  pell_ober:{name:"Dummy: Oberhau",q:"pell training longsword",
+    steps:["Start out of reach in Vom Tag.","Step in and cut an Oberhau onto the head or shoulder, then step back out.","Alternate right and left sides for the timer."],
+    tips:["A clean edge hit sounds sharp. The flat gives a slap.","Control the cut. Stop at the target instead of trying to chop through the post."]},
+  pell_thrust:{name:"Dummy: thrust",q:"longsword thrust pell practice",
+    steps:["Start out of reach in Pflug.","Step in and thrust at the painted target, stopping as the point lands.","Recover to Pflug and step back out. Repeat for the timer."],
+    tips:["Only thrust into the dummy with a synthetic or wooden sword.","Accuracy first. Hit the target, not just the dummy."]},
+  pell_combo:{name:"Dummy: combinations",q:"pell training combinations longsword",
+    steps:["Pick one pair per round: Oberhau then Unterhau, Zornhau then thrust, or Unterhau then Oberhau.","Step in, land both actions, then step back out.","Change the pair each round."],
+    tips:["The second action should flow from where the first one ended, with no reset in between.","Slow and correct beats fast and sloppy. Speed comes on its own."]}
+};
+
+/* ---------- Sessions ---------- */
+var SWORD_DAYS = [
+  {id:"sw1",short:"1",full:"Session 1",focus:"Grip, stance and guards",
+   equipment:"training sword or a broom handle",
+   why:"The four guards are the positions every cut starts and ends in. Holding them builds the shoulder and grip endurance you'll need for everything else.",
+   plan:[
+    {ex:"warm_sword",time:240,after:15},
+    {ex:"grip_stance",time:60,after:15},
+    {ex:"guard_vomtag",sets:2,time:20,sides:true,rest:15},
+    {ex:"guard_ochs",sets:2,time:20,sides:true,rest:15},
+    {ex:"guard_pflug",sets:2,time:20,sides:true,rest:15},
+    {ex:"guard_alber",sets:2,time:20,rest:15},
+    {ex:"guard_flow",sets:3,reps:"3 slow rounds each side",rest:30},
+    {ex:"cool_sword",time:120}
+   ]},
+  {id:"sw2",short:"2",full:"Session 2",focus:"Footwork",
+   equipment:"space to move, sword for the last drill",
+   why:"A cut with no footwork behind it is just an arm swing. This session is all legs, and it's the half of longsword that people most often skip.",
+   plan:[
+    {ex:"warm_sword",time:240,after:15},
+    {ex:"foot_step",sets:3,time:45,rest:30},
+    {ex:"foot_pass",sets:3,time:45,rest:30},
+    {ex:"step_guard",sets:3,time:45,rest:30},
+    {ex:"cool_sword",time:120}
+   ]},
+  {id:"sw3",short:"3",full:"Session 3",focus:"The basic cuts",
+   equipment:"training sword",
+   why:"Three cuts and a thrust cover most of what a longsword does. Slow, correct reps now build the pattern your body relies on later.",
+   plan:[
+    {ex:"warm_sword",time:240,after:15},
+    {ex:"cut_ober",sets:3,reps:"8 each side",rest:45},
+    {ex:"cut_unter",sets:3,reps:"8 each side",rest:45},
+    {ex:"cut_mittel",sets:2,reps:"8 each side",rest:45},
+    {ex:"thrust",sets:3,reps:"8 reps",rest:45},
+    {ex:"cool_sword",time:120}
+   ]},
+  {id:"sw4",short:"4",full:"Session 4",focus:"Cutting with footwork",
+   equipment:"training sword",
+   why:"This is where the feet and the sword start moving as one. The Zornhau is the foundation of German longsword, so it gets the most reps.",
+   plan:[
+    {ex:"warm_sword",time:240,after:15},
+    {ex:"cut_zorn",sets:3,reps:"8 each side",rest:45},
+    {ex:"zorn_ort",sets:3,reps:"6 reps",rest:45},
+    {ex:"cut_flow",sets:3,reps:"3 rounds",rest:45},
+    {ex:"step_guard",sets:1,time:45},
+    {ex:"cool_sword",time:120}
+   ]},
+  {id:"sw5",short:"5",full:"Session 5",focus:"Dummy work",
+   equipment:"synthetic or wooden sword and the dummy",
+   why:"Hitting something real teaches distance, edge alignment and control in a way air cutting can't. Save this one until the dummy is built.",
+   plan:[
+    {ex:"warm_sword",time:240,after:15},
+    {ex:"pell_measure",sets:2,reps:"10 approaches",rest:30},
+    {ex:"pell_ober",sets:4,time:40,rest:40},
+    {ex:"pell_thrust",sets:3,time:40,rest:40},
+    {ex:"pell_combo",sets:4,time:40,rest:40},
+    {ex:"cool_sword",time:120}
+   ]}
+];
+
+var LIB={};[COND_LIB,SWORD_LIB].forEach(function(o){for(var k in o)LIB[k]=o[k];});
+var SESS={};COND_DAYS.concat(SWORD_DAYS).forEach(function(d){SESS[d.id]=d;});
+/*
+  Silhouette figures for the "How to" sheets.
+  Poses are built from joint angles in degrees: 0 = pointing down,
+  90 = pointing right (the way the figure faces), 180 = up, -90 = left.
+  t = torso, ua/fa = upper arm/forearm, th/sh = thigh/shin, f = foot,
+  hd = hand. 1 = near side, 2 = far side (drawn faded).
+  a1/a2 (arms) or l1/l2 (legs) = {to:[x,y], bend:1 or -1} places a hand or
+  foot at a point instead (the hip is at 0,0). front:true draws a front view.
+*/
+/* ---------- Figure engine: poses drawn from joint angles ---------- */
+var FIGDIM={T:40,S:35,HN:12,HR:9.5,UA:23,FA:21,TH:30,SH:29,FT:9,HD:12};
+function fdir(a){var r=a*Math.PI/180;return [Math.sin(r),Math.cos(r)];}
+function fadd(p,d,l){return [p[0]+d[0]*l,p[1]+d[1]*l];}
+function fang(v){return Math.atan2(v[0],v[1])*180/Math.PI;}
+function fik(base,tgt,a,b,bend){
+  if(!bend){var up=fik(base,tgt,a,b,1),dn=fik(base,tgt,a,b,-1);return up[0][1]>=dn[0][1]?up:dn;}
+  var v=[tgt[0]-base[0],tgt[1]-base[1]],d=Math.hypot(v[0],v[1]);
+  d=Math.min(d,a+b-0.01);d=Math.max(d,Math.abs(a-b)+0.01);
+  var phi=fang(v),c=(a*a+d*d-b*b)/(2*a*d);c=Math.max(-1,Math.min(1,c));
+  var al=Math.acos(c)*180/Math.PI;
+  var el=fadd(base,fdir(phi+bend*al),a);
+  var end=fadd(el,fdir(fang([tgt[0]-el[0],tgt[1]-el[1]])),b);
+  return [el,end];
+}
+function fpose(p){
+  var D=FIGDIM,tl=p.tl||1,t=p.t==null?180:p.t,td=fdir(t),front=!!p.front;
+  var perp=[-Math.cos(t*Math.PI/180),Math.sin(t*Math.PI/180)];
+  var H=[0,0],N=fadd(H,td,D.T*tl),Sh=fadd(H,td,D.S*tl);
+  var head=fadd(N,fdir(p.h==null?t:p.h),p.hover?3:D.HN);
+  var segs=[],dots=[];
+  var sw=front?11:0,hw=front?6:0;
+  function limb(i,base,kind){
+    var A=kind==="arm"?D.UA:D.TH,B=kind==="arm"?D.FA:D.SH;
+    var k1=kind==="arm"?"ua":"th",k2=kind==="arm"?"fa":"sh",ik=p[(kind==="arm"?"a":"l")+i];
+    var j1,j2;
+    if(ik){var r=fik(base,ik.to,A,B,ik.bend==null?1:ik.bend);j1=r[0];j2=r[1];}
+    else{
+      var d1=p[k1+i];if(d1==null)d1=p[k1];if(d1==null)d1=0;
+      var d2=p[k2+i];if(d2==null)d2=p[k2];if(d2==null)d2=d1;
+      j1=fadd(base,fdir(d1),A);j2=fadd(j1,fdir(d2),B);
+    }
+    var far=!front&&i===2;
+    var pts=[base,j1,j2];
+    if(kind==="leg"){var f=p["f"+i];if(f==null)f=p.f;if(f==null)f=90;pts.push(fadd(j2,fdir(f),D.FT));}
+    else{var hd=p["hd"+i];if(hd==null)hd=p.hd;if(hd!=null){var e=fadd(j2,fdir(hd),D.HD);pts.push(e);j2=e;}}
+    segs.push({pts:pts,w:kind==="arm"?9:11,far:far});
+    if(kind==="arm"&&(p.db===true||(p.db==="one"&&i===1))){dots.push({c:j2,r:p.db==="one"?6.5:(p.hd1!=null||p.hd!=null?4:5),far:far});}
+    return pts;
+  }
+  var sh1=fadd(Sh,perp,sw),sh2=fadd(Sh,perp,-sw),hp1=fadd(H,perp,hw),hp2=fadd(H,perp,-hw);
+  limb(2,hp2,"leg");limb(2,sh2,"arm");
+  segs.push({pts:[H,N],w:front?20:15,far:false,torso:true});
+  limb(1,hp1,"leg");limb(1,sh1,"arm");
+  // order: far limbs first, then torso, then near
+  var far=segs.filter(function(s){return s.far;}),near=segs.filter(function(s){return !s.far;});
+  var box=[1e9,1e9,-1e9,-1e9];
+  function grow(pt,r){box[0]=Math.min(box[0],pt[0]-r);box[1]=Math.min(box[1],pt[1]-r);box[2]=Math.max(box[2],pt[0]+r);box[3]=Math.max(box[3],pt[1]+r);}
+  segs.forEach(function(s){s.pts.forEach(function(pt){grow(pt,s.w/2);});});
+  grow(head,D.HR);dots.forEach(function(d){grow(d.c,d.r);});
+  (p.props||[]).forEach(function(pr){grow([pr.x,pr.y],1);grow([pr.x+(pr.w||0),pr.y+(pr.h||(pr.type==="dummy"?56:0))],1);});
+  var sword=null;
+  if(p.sword){
+    var sw2=p.sword,ang=sw2.angle,len=sw2.len==null?66:sw2.len,guard=sw2.guard==null?8:sw2.guard;
+    var hilt=sw2.hilt,dblade=fdir(ang),tip=fadd(hilt,dblade,len),pommel=fadd(hilt,dblade,-(sw2.grip==null?16:sw2.grip));
+    var pp=[-dblade[1],dblade[0]];
+    sword={hilt:hilt,tip:tip,pommel:pommel,g1:fadd(hilt,pp,guard),g2:fadd(hilt,pp,-guard)};
+    grow(hilt,5);grow(tip,4);grow(pommel,4);grow(sword.g1,4);grow(sword.g2,4);
+  }
+  return {hover:!!p.hover,far:far,near:near,head:head,dots:dots,box:box,props:p.props||[],ground:p.ground!==false,sword:sword};
+}
+function fpath(pts){return "M"+pts.map(function(q){return q[0].toFixed(1)+" "+q[1].toFixed(1);}).join(" L");}
+function figureFrames(fig){
+  var W=150,Hh=140,pad=10;
+  var ps=fig.frames.map(fpose);
+  var s=1;
+  ps.forEach(function(p){
+    var bw=p.box[2]-p.box[0],bh=p.box[3]-p.box[1];
+    s=Math.min(s,(W-2*pad)/bw,(Hh-2*pad-6)/bh);
+  });
+  return ps.map(function(p){
+    var cx=(p.box[0]+p.box[2])/2,groundY=p.box[3];
+    var tx=W/2-cx*s,ty=p.ground?(Hh-pad-4-groundY*s):(Hh/2-((p.box[1]+p.box[3])/2)*s);
+    var g='<g transform="translate('+tx.toFixed(1)+' '+ty.toFixed(1)+') scale('+s.toFixed(3)+')">';
+    p.props.forEach(function(pr){
+      if(pr.type==="bench"){
+        var bottom=groundY;
+        g+='<rect x="'+pr.x+'" y="'+pr.y+'" width="'+pr.w+'" height="5" rx="2" style="fill:var(--fig-prop)"/>';
+        g+='<rect x="'+(pr.x+3)+'" y="'+(pr.y+4)+'" width="4" height="'+(bottom-pr.y-4)+'" style="fill:var(--fig-prop)"/>';
+        g+='<rect x="'+(pr.x+pr.w-7)+'" y="'+(pr.y+4)+'" width="4" height="'+(bottom-pr.y-4)+'" style="fill:var(--fig-prop)"/>';
+      }else if(pr.type==="dummy"){
+        var cx=pr.x+pr.w/2;
+        g+='<rect x="'+(cx-3)+'" y="'+(pr.y+50)+'" width="6" height="'+(groundY-pr.y-50)+'" style="fill:var(--fig-prop)"/>';
+        g+='<rect x="'+(cx-14)+'" y="'+(groundY-5)+'" width="28" height="5" rx="2" style="fill:var(--fig-prop)"/>';
+        g+='<rect x="'+pr.x+'" y="'+(pr.y+19)+'" width="'+pr.w+'" height="36" rx="9" style="fill:var(--fig-prop)"/>';
+        g+='<circle cx="'+cx+'" cy="'+(pr.y+9)+'" r="9" style="fill:var(--fig-prop)"/>';
+        g+='<circle cx="'+cx+'" cy="'+(pr.y+35)+'" r="6" fill="none" stroke-width="2" style="stroke:var(--fig-db)"/>';
+      }else if(pr.type==="bar"){
+        g+='<line x1="'+pr.x+'" y1="'+pr.y+'" x2="'+(pr.x+pr.w)+'" y2="'+pr.y+'" stroke-width="4" stroke-linecap="round" style="stroke:var(--fig-prop)"/>';
+      }
+    });
+    function draw(list,op){
+      list.forEach(function(sg){
+        g+='<path d="'+fpath(sg.pts)+'" fill="none" stroke-width="'+sg.w+'" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--fig)'+(op?';opacity:'+op:'')+'"/>';
+      });
+    }
+    draw(p.far,0.42);
+    p.dots.filter(function(d){return d.far;}).forEach(function(d){g+='<circle cx="'+d.c[0].toFixed(1)+'" cy="'+d.c[1].toFixed(1)+'" r="'+d.r+'" style="fill:var(--fig-db);opacity:.6"/>';});
+    draw(p.near,0);
+    g+='<circle cx="'+p.head[0].toFixed(1)+'" cy="'+p.head[1].toFixed(1)+'" r="'+FIGDIM.HR+'" style="fill:var(--fig)'+(p.hover?';stroke:var(--fig-bg);stroke-width:2':'')+'"/>';
+    p.dots.filter(function(d){return !d.far;}).forEach(function(d){g+='<circle cx="'+d.c[0].toFixed(1)+'" cy="'+d.c[1].toFixed(1)+'" r="'+d.r+'" style="fill:var(--fig-db)"/>';});
+    if(p.sword){
+      var sw3=p.sword;
+      g+='<line x1="'+sw3.pommel[0].toFixed(1)+'" y1="'+sw3.pommel[1].toFixed(1)+'" x2="'+sw3.hilt[0].toFixed(1)+'" y2="'+sw3.hilt[1].toFixed(1)+'" stroke-width="5.5" stroke-linecap="round" style="stroke:var(--fig-prop)"/>';
+      g+='<line x1="'+sw3.g1[0].toFixed(1)+'" y1="'+sw3.g1[1].toFixed(1)+'" x2="'+sw3.g2[0].toFixed(1)+'" y2="'+sw3.g2[1].toFixed(1)+'" stroke-width="3.4" stroke-linecap="round" style="stroke:var(--fig-prop)"/>';
+      g+='<line x1="'+sw3.hilt[0].toFixed(1)+'" y1="'+sw3.hilt[1].toFixed(1)+'" x2="'+sw3.tip[0].toFixed(1)+'" y2="'+sw3.tip[1].toFixed(1)+'" stroke-width="3.2" stroke-linecap="round" style="stroke:var(--fig-blade)"/>';
+    }
+    g+='</g>';
+    var ground=p.ground?'<line x1="8" y1="'+(Hh-pad-4)+'" x2="'+(W-8)+'" y2="'+(Hh-pad-4)+'" stroke-width="2" stroke-linecap="round" style="stroke:var(--fig-ground)"/>':'';
+    return '<svg viewBox="0 0 '+W+' '+Hh+'" xmlns="http://www.w3.org/2000/svg" role="img">'+ground+g+'</svg>';
   });
 }
+
+/* ---------- Poses ---------- */
+var STAND={t:180,th1:3,sh1:3,th2:-3,sh2:-3,ua1:4,ua2:-4};
+var FSTANCE={t:172,th1:22,sh1:12,th2:-16,sh2:-20,f1:88,f2:96};
+function X(base,o){var r={};for(var k in base)r[k]=base[k];for(var k2 in o)r[k2]=o[k2];return r;}
+/* SWD(stance, hilt [x,y], blade angle, front view?, props): both hands on the grip */
+var FFRONT={front:true,t:180,th1:14,sh1:4,th2:-14,sh2:-4,f1:90,f2:-90};
+function SWD(base,hilt,angle,front,props){
+  var d=fdir(angle),h1=[hilt[0]-d[0]*3,hilt[1]-d[1]*3],h2=[hilt[0]-d[0]*12,hilt[1]-d[1]*12];
+  var o={a1:{to:h1,bend:0},a2:{to:h2,bend:0},sword:{hilt:hilt,angle:angle}};
+  if(props)o.props=props;
+  return X(base,o);
+}
+var FIG={
+  squat:{labels:["Stand tall","Sit back and down"],frames:[
+    X(STAND,{ua1:92,ua2:88,fa:92}),
+    {t:142,th1:82,sh1:-18,th2:78,sh2:-20,ua1:100,ua2:96,fa:100}]},
+  bridge:{labels:["Hips down","Squeeze and lift"],frames:[
+    {t:-90,h:-100,th:150,sh:30,f:90,ua:90,fa:90,ua2:92,fa2:92},
+    {t:-70,h:-100,th:110,sh:40,f:90,ua:95,fa:92}]},
+  lunge:{labels:["Stand tall","Step back and lower"],frames:[
+    X(STAND,{}),
+    {t:180,th1:85,sh1:0,th2:-20,sh2:-100,f2:25,ua1:6,ua2:-6}]},
+  calf:{labels:["Heels down","Rise onto your toes"],frames:[
+    X(STAND,{}),X(STAND,{f:45})]},
+  plank:{labels:["Hold a straight line"],frames:[
+    {t:100,h:100,th:-80,sh:-80,f:10,ua:0,fa:90,ua2:-4,fa2:90}]},
+  side_plank:{labels:["Lift your hips"],frames:[
+    {t:104,h:110,th:-76,sh:-76,f:100,ua1:0,fa1:90,ua2:175,fa2:178,th2:-74,sh2:-74}]},
+  dead_bug:{labels:["Arms and knees up","Lower opposite arm and leg"],frames:[
+    {t:-90,h:-95,ua:180,fa:180,ua2:176,fa2:176,th:180,sh:90,th2:176,sh2:88,f:180},
+    {t:-90,h:-95,ua1:-100,fa1:-98,ua2:176,fa2:176,th1:180,sh1:90,f1:180,th2:100,sh2:100,f2:170}]},
+  farmer:{labels:["Stand tall, weights at sides","Slow, steady steps"],frames:[
+    X(STAND,{db:true,ua1:2,ua2:-2}),
+    {t:180,th1:22,sh1:4,th2:-16,sh2:-30,f2:45,ua1:2,ua2:-2,db:true}]},
+  wrist_curl:{labels:["Let the weight roll down","Curl the wrist up"],frames:[
+    {t:150,th:90,sh:0,ua:0,fa:90,hd:8,db:true,props:[{type:"bench",x:-16,y:7,w:34}]},
+    {t:150,th:90,sh:0,ua:0,fa:90,hd:172,db:true,props:[{type:"bench",x:-16,y:7,w:34}]}]},
+  rev_wrist:{labels:["Palms down, hand relaxed","Lift the back of the hand"],frames:[
+    {t:150,th:90,sh:0,ua:0,fa:90,hd:8,db:true,props:[{type:"bench",x:-16,y:7,w:34}]},
+    {t:150,th:90,sh:0,ua:0,fa:90,hd:150,db:true,props:[{type:"bench",x:-16,y:7,w:34}]}]},
+  dead_hang:{labels:["Hang with straight arms"],frames:[
+    {t:180,ua1:178,fa1:178,ua2:182,fa2:182,th1:8,sh1:-4,th2:2,sh2:-8,f:60,ground:false,props:[{type:"bar",x:-24,y:-86,w:48}]}]},
+  pushup:{labels:["Straight arms, straight body","Chest to just above the floor"],frames:[
+    {t:111,h:108,th:-69,sh:-69,f:12,ua:0,fa:0,ua2:-3,fa2:-3},
+    {t:95,h:95,th:-85,sh:-85,f:12,ua:-100,fa:0,ua2:-104,fa2:-2}]},
+  db_row:{labels:["Arm hanging straight","Pull elbow past your ribs"],frames:[
+    {t:108,h:104,th1:12,sh1:-4,a2:{to:[34,32],bend:1},th2:0,sh2:-90,f2:-90,ua1:4,fa1:4,db:true,props:[{type:"bench",x:-36,y:34,w:84}]},
+    {t:108,h:104,th1:12,sh1:-4,a2:{to:[34,32],bend:1},th2:0,sh2:-90,f2:-90,ua1:-118,fa1:2,db:true,props:[{type:"bench",x:-36,y:34,w:84}]}]},
+  press:{labels:["Weights at shoulders","Press straight up"],frames:[
+    {front:true,t:180,th1:4,sh1:2,th2:-4,sh2:-2,f1:90,f2:-90,ua1:80,fa1:178,ua2:-80,fa2:-178,db:true},
+    {front:true,t:180,th1:4,sh1:2,th2:-4,sh2:-2,f1:90,f2:-90,ua1:172,fa1:178,ua2:-172,fa2:-178,db:true}]},
+  rear_delt:{labels:["Hinge, arms hanging","Raise out to the sides"],frames:[
+    {front:true,t:180,tl:0.62,h:0,hover:true,th1:6,sh1:0,th2:-6,sh2:0,f1:90,f2:-90,ua1:6,fa1:4,ua2:-6,fa2:-4,db:true},
+    {front:true,t:180,tl:0.62,h:0,hover:true,th1:6,sh1:0,th2:-6,sh2:0,f1:90,f2:-90,ua1:84,fa1:76,ua2:-84,fa2:-76,db:true}]},
+  squat_press:{labels:["Squat with weights at shoulders","Stand and press overhead"],frames:[
+    {t:148,th1:82,sh1:-18,th2:78,sh2:-20,ua1:30,fa1:172,ua2:26,fa2:170,db:true},
+    X(STAND,{ua1:178,fa1:180,ua2:174,fa2:178,db:true})]},
+  plank_row:{labels:["High plank holding weights","Row one to your ribs"],frames:[
+    {t:111,h:108,th:-69,sh:-69,f:12,ua:0,fa:0,ua2:-3,fa2:-3,db:true},
+    {t:111,h:108,th:-69,sh:-69,f:12,ua1:-118,fa1:2,ua2:-3,fa2:-3,db:true}]},
+  woodchop:{labels:["Weight above one shoulder","Chop down across to the other hip"],frames:[
+    {front:true,t:176,th1:14,sh1:6,th2:-14,sh2:-6,f1:90,f2:-90,a1:{to:[-24,-66],bend:-1},a2:{to:[-24,-66],bend:1},db:"one"},
+    {front:true,t:188,h:196,th1:14,sh1:6,th2:-10,sh2:-4,f1:90,f2:-60,a1:{to:[24,10],bend:1},a2:{to:[24,10],bend:-1},db:"one"}]},
+  russian:{labels:["Lean back, hands in front","Rotate to touch beside the hip"],frames:[
+    {t:-155,h:-165,th:135,sh:30,f:90,a1:{to:[22,-32],bend:-1},a2:{to:[20,-31],bend:-1}},
+    {t:-155,h:-150,th:135,sh:30,f:90,a1:{to:[-6,4],bend:-1},a2:{to:[-4,2],bend:-1}}]},
+  bird_dog:{labels:["On hands and knees","Reach opposite arm and leg"],frames:[
+    {t:106,h:104,th:0,sh:-90,f:-100,a1:{to:[34,30],bend:1},a2:{to:[31,30],bend:1},th2:-3,sh2:-90},
+    {t:106,h:104,th1:0,sh1:-90,f1:-100,ua1:98,fa1:98,a2:{to:[31,30],bend:1},th2:-92,sh2:-92,f2:-100}]},
+
+  grip_stance:{labels:["Hands apart, knees soft"],frames:[
+    SWD(FSTANCE,[18,-6],135)]},
+  guard_vomtag:{labels:["Vom Tag: sword above the head"],frames:[
+    SWD(FSTANCE,[12,-70],-140)]},
+  guard_ochs:{labels:["Ochs: hilt by the head, point at the face"],frames:[
+    SWD(FSTANCE,[10,-56],88)]},
+  guard_pflug:{labels:["Pflug: hilt by the hip, point up at the face"],frames:[
+    SWD(FSTANCE,[18,-6],135)]},
+  guard_alber:{labels:["Alber: point toward the ground"],frames:[
+    SWD(FSTANCE,[16,6],40)]},
+
+  foot_step:{labels:["Front foot steps forward","Back foot follows"],frames:[
+    X(FSTANCE,{th1:40,sh1:14,th2:-22,sh2:-18}),
+    X(FSTANCE,{})]},
+  foot_pass:{labels:["Left foot forward","Back foot passes to the front"],frames:[
+    X(FSTANCE,{}),
+    X(FSTANCE,{th1:-18,sh1:-20,f1:96,th2:22,sh2:12,f2:88})]},
+  step_guard:{labels:["Pflug on the right","Pass, Pflug on the left"],frames:[
+    SWD(FSTANCE,[18,-6],135),
+    SWD(X(FSTANCE,{th1:-18,sh1:-20,f1:96,th2:22,sh2:12,f2:88}),[16,-8],130)]},
+
+  cut_ober:{labels:["Start in Vom Tag","Cut down and through"],frames:[
+    SWD(FSTANCE,[12,-70],-140),
+    SWD(FSTANCE,[18,4],45)]},
+  cut_unter:{labels:["Start low","Cut rising, hands finish high"],frames:[
+    SWD(FSTANCE,[16,6],40),
+    SWD(FSTANCE,[24,-48],122)]},
+  cut_mittel:{labels:["Sword high on one side","Cut level across"],frames:[
+    SWD(FFRONT,[-20,-36],-100,true),
+    SWD(FFRONT,[22,-36],96,true)]},
+  thrust:{labels:["Start in Pflug","Extend into Langort"],frames:[
+    SWD(FSTANCE,[18,-6],135),
+    SWD(FSTANCE,[40,-30],90)]},
+  cut_zorn:{labels:["Vom Tag, left foot forward","Pass and cut, point on target"],frames:[
+    SWD(FSTANCE,[12,-70],-140),
+    SWD(X(FSTANCE,{th1:-18,sh1:-20,f1:96,th2:26,sh2:10,f2:88}),[34,-34],92)]},
+  zorn_ort:{labels:["The Zornhau lands","Push the point on"],frames:[
+    SWD(X(FSTANCE,{th1:-18,sh1:-20,f1:96,th2:26,sh2:10,f2:88}),[34,-34],92),
+    SWD(X(FSTANCE,{th1:-22,sh1:-20,f1:96,th2:34,sh2:12,f2:88}),[42,-36],90)]},
+
+  pell_ober:{labels:["Vom Tag, out of reach","Step in, cut lands on the head"],frames:[
+    SWD(FSTANCE,[12,-70],-140,false,[{type:"dummy",x:92,y:-64,w:28}]),
+    SWD(X(FSTANCE,{th1:-18,sh1:-20,f1:96,th2:26,sh2:10,f2:88}),[34,-46],96,false,[{type:"dummy",x:92,y:-64,w:28}])]},
+  pell_thrust:{labels:["Pflug, out of reach","Step in, point on the target"],frames:[
+    SWD(FSTANCE,[18,-6],135,false,[{type:"dummy",x:102,y:-64,w:28}]),
+    SWD(X(FSTANCE,{th1:-18,sh1:-20,f1:96,th2:26,sh2:10,f2:88}),[40,-30],92,false,[{type:"dummy",x:102,y:-64,w:28}])]}
+};
+/* ---------- Program: weeks, phases, check-ins ---------- */
+var KEY="lp-program-v1";
+var RULES={minWeekPhase1:4,typicalPhase1:6,minWeeksInPhase1:3,typicalPhase1Length:4,streakNeeded:2,passScore:4.5,minSessions:5};
+var DAYN=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+var DAYFULL=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+var PHASE_NAMES=["Conditioning","Sword phase 1","Sword phase 2"];
+var SWORD="SWORD",DAYMS=864e5;
+
+function mondayOf(d){var x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x;}
+function freshState(){return {start:mondayOf(new Date()).getTime(),firstDay:(new Date().getDay()+6)%7,weeks:{},phases:[{phase:0,from:1}],dummy:false,announce:null};}
+var S=(function(){var s=null;try{s=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}return (s&&s.start&&s.phases)?s:freshState();})();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+save();
+
+function weekNum(date){return Math.round((mondayOf(date).getTime()-S.start)/(7*DAYMS))+1;}
+function curWeek(){return Math.max(1,weekNum(new Date()));}
+function todayIdx(){return (new Date().getDay()+6)%7;}
+function W(w){return S.weeks[w]||{done:{}};}
+function wk(w){if(!S.weeks[w])S.weeks[w]={done:{}};if(!S.weeks[w].done)S.weeks[w].done={};return S.weeks[w];}
+function weekDate(w,i){var d=new Date(S.start);d.setDate(d.getDate()+(w-1)*7+i);return d;}
+function fmtDate(d){return d.getDate()+" "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()];}
+
+function phaseFor(w){var p=0;S.phases.forEach(function(c){if(c.from<=w)p=c.phase;});return p;}
+function phaseStart(w){var f=1;S.phases.forEach(function(c){if(c.from<=w)f=c.from;});return f;}
+function firstWeekOf(ph){for(var i=0;i<S.phases.length;i++){if(S.phases[i].phase===ph)return S.phases[i].from;}return null;}
+function setPhase(ph,from){
+  S.phases=S.phases.filter(function(c){return c.from<from;});
+  if(phaseFor(from)!==ph||!S.phases.length)S.phases.push({phase:ph,from:from});
+  if(!S.phases.length||S.phases[0].from!==1)S.phases.unshift({phase:0,from:1});
+  save();
+}
+
+function slotsFor(w){
+  var p=phaseFor(w);
+  if(p===0)return ["mon","tue","wed","thu","fri","sat","sun"];
+  if(p===1)return ["mon","tue","wed","thu","fri",SWORD,"sun"];
+  return ["mon",SWORD,"wed",(w%2?"tue":"thu"),SWORD,"fri","sun"];
+}
+function swordSeq(p){return p===1?["sw1","sw2"]:(S.dummy?["sw3","sw4","sw5"]:["sw3","sw4"]);}
+function isSword(id){return /^sw\d/.test(id);}
+function swordDoneBefore(w){
+  var p=phaseFor(w),from=phaseStart(w),n=0;
+  for(var k=from;k<w;k++){var d=W(k).done;for(var i in d){if(d[i]&&isSword(d[i].id))n++;}}
+  return n;
+}
+function slotState(w,i){
+  var cw=curWeek(),ti=todayIdx();
+  if(w===1&&i<(S.firstDay||0)&&!W(1).done[i])return "pre";
+  if(W(w).done[i])return "done";
+  if(w<cw||(w===cw&&i<ti))return "missed";
+  if(w===cw&&i===ti)return "today";
+  return "future";
+}
+function weekPlan(w){
+  var sl=slotsFor(w),seq=swordSeq(phaseFor(w)),n=swordDoneBefore(w),dn=W(w).done,out=[];
+  sl.forEach(function(id,i){
+    var st=slotState(w,i),sid=id;
+    if(dn[i])sid=dn[i].id;
+    else if(id===SWORD)sid=seq[n%seq.length];
+    var sword=isSword(sid);
+    if(sword&&(dn[i]||st==="today"||st==="future"))n++;
+    out.push({w:w,i:i,id:sid,state:st,sword:sword,rest:!!(SESS[sid]&&SESS[sid].rest)});
+  });
+  return out;
+}
+function doneCount(w){var c=0,d=W(w).done;for(var i in d){if(d[i])c++;}return c;}
+function trainingSlots(w){return weekPlan(w).filter(function(s){return !s.rest;}).length;}
+function markDone(w,i,id){wk(w).done[i]={id:id,t:Date.now()};save();}
+function unmark(w,i){if(S.weeks[w]&&S.weeks[w].done)delete S.weeks[w].done[i];save();}
+
+function streakAt(w){
+  if(w<1)return 0;
+  var p=phaseFor(w),n=0;
+  for(var k=w;k>=1&&phaseFor(k)===p;k--){var r=W(k).rating;if(r&&r.q)n++;else break;}
+  return n;
+}
+function currentStreak(){var cw=curWeek();if(W(cw).rating)return streakAt(cw);return (cw>1&&phaseFor(cw-1)===phaseFor(cw))?streakAt(cw-1):0;}
+function estimates(){
+  var cw=curWeek(),p=phaseFor(cw),st=currentStreak(),need=Math.max(1,RULES.streakNeeded-st),e1,e2,a1=false,a2=false;
+  if(p>=1){e1=firstWeekOf(1)||phaseStart(cw);a1=true;}
+  else{e1=Math.max(st>0?RULES.minWeekPhase1+1:RULES.typicalPhase1,cw+need);}
+  if(p>=2){e2=firstWeekOf(2);a2=true;}
+  else if(p===1){var s1=phaseStart(cw);e2=Math.max(st>0?s1+RULES.minWeeksInPhase1:s1+RULES.typicalPhase1Length,cw+need);}
+  else{e2=e1+RULES.typicalPhase1Length;}
+  return {e1:e1,e2:e2,a1:a1,a2:a2};
+}
+function projectedPhase(w){
+  var cw=curWeek();if(w<=cw)return phaseFor(w);
+  var e=estimates(),p=phaseFor(cw);
+  if(p<2&&w>=e.e2)return 2;
+  if(p<1&&w>=e.e1)return 1;
+  return p;
+}
+function pendingCheckin(){
+  var cw=curWeek();
+  if(todayIdx()===6&&!W(cw).rating)return cw;
+  if(cw>1&&!W(cw-1).rating)return cw-1;
+  return null;
+}
+var QUESTIONS=[
+  {q2:"How are your grip and shoulders coping?",lo:"Worn out",hi:"Strong"},
+  {q2:"How confident do you feel with the guards and footwork?",lo:"Lost",hi:"Confident"},
+  {q2:"How are the cuts and drills feeling?",lo:"Clumsy",hi:"Smooth"}
+];
+function saveCheckin(w,s1,s2,pain){
+  var score=(s1+s2)/2,dc=doneCount(w),total=trainingSlots(w);
+  var q=score>=RULES.passScore&&!pain&&dc>=Math.min(RULES.minSessions,total);
+  wk(w).rating={s1:s1,s2:s2,pain:pain,score:score,done:dc,q:q};
+  var p=phaseFor(w),later=S.phases.some(function(c){return c.from>w;}),st=streakAt(w),res={score:score,dc:dc,total:total,q:q,pain:pain,advanced:null};
+  if(q&&!later){
+    if(p===0&&st>=RULES.streakNeeded&&w>=RULES.minWeekPhase1){setPhase(1,w+1);res.advanced={phase:1,from:w+1};}
+    else if(p===1&&st>=RULES.streakNeeded&&(w-phaseStart(w)+1)>=RULES.minWeeksInPhase1){setPhase(2,w+1);res.advanced={phase:2,from:w+1};}
+  }
+  if(res.advanced)S.announce=res.advanced;
+  res.streak=st;res.phase=p;res.w=w;
+  save();
+  return res;
+}
+function skipCheckin(w){wk(w).rating={skipped:true};save();}
+/* ---------- Helpers ---------- */
+var $ = function(id){return document.getElementById(id);};
+var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+var INFO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>';
+var PAUSE='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+var PLAY='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+var BLADE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 5L9.5 14.5M7 12l5 5M8.5 15.5L5 19"/></svg>';
+var STAR='<svg viewBox="0 0 24 24"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8z"/></svg>';
+var RING_C=2*Math.PI*108;
+var SPK_ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>';
+var SPK_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M16 9l6 6M22 9l-6 6"/></svg>';
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function clock(s){s=Math.max(0,Math.round(s));var m=Math.floor(s/60),r=s%60;return m+":"+(r<10?"0":"")+r;}
+function dur(s){if(s>=60&&s%60===0)return (s/60)+" min";if(s>=60)return clock(s);return s+"s";}
+function scheme(item){var sets=item.sets||1;var per=item.time?dur(item.time):item.reps;if(item.sides)per+=" each side";return sets>1?sets+" × "+per:per;}
+
+function buildSteps(day){
+  var steps=[];
+  day.plan.forEach(function(item,pi){
+    var ex=LIB[item.ex],sets=item.sets||1,sides=item.sides?["Left side","Right side"]:[null];
+    for(var s=1;s<=sets;s++){
+      sides.forEach(function(side,si){
+        steps.push({kind:"work",exId:item.ex,name:ex.name,setNo:s,setTotal:sets,side:side,
+          mode:item.time?"time":"reps",seconds:item.time||0,reps:item.reps||"",optional:!!item.optional,
+          phase:/^warm/.test(item.ex)?"Warm-up":(/^cool/.test(item.ex)?"Cool-down":"Work")});
+        if(si<sides.length-1)steps.push({kind:"rest",seconds:8,label:"Switch sides"});
+      });
+      if(s<sets&&item.rest)steps.push({kind:"rest",seconds:item.rest,label:item.restLabel||"Rest",cue:item.restCue||""});
+    }
+    if(pi<day.plan.length-1)steps.push({kind:"rest",seconds:(item.after!=null?item.after:30),label:"Get ready"});
+  });
+  steps.forEach(function(st,i){if(st.kind==="rest"){for(var j=i+1;j<steps.length;j++){if(steps[j].kind==="work"){st.next=steps[j];break;}}}});
+  return steps;
+}
+function estimateMin(day){var t=0;buildSteps(day).forEach(function(st){t+=(st.kind==="work"&&st.mode==="reps")?40:st.seconds;});return Math.round(t/60);}
+function sessTitle(s){return s.focus;}
+
+/* ---------- Screens and tabs ---------- */
+var SCREENS=["home","preview","brief","player","done"],TAB="week";
+function show(id){SCREENS.forEach(function(s){$(s).hidden=(s!==id);});window.scrollTo(0,0);}
+function setTab(t){
+  TAB=t;
+  ["week","progress","all"].forEach(function(k){$("tab-"+k).hidden=(k!==t);});
+  document.querySelectorAll(".tab-btn").forEach(function(b){b.setAttribute("aria-selected",b.getAttribute("data-tab")===t?"true":"false");});
+  renderAll();window.scrollTo(0,0);
+}
+document.querySelectorAll(".tab-btn").forEach(function(b){b.addEventListener("click",function(){setTab(b.getAttribute("data-tab"));});});
+function renderAll(){renderWeek();renderProgress();renderAllSessions();}
+
+/* ---------- This week ---------- */
+function phaseChip(p){return '<span class="phase-chip p'+p+'">'+PHASE_NAMES[p]+'</span>';}
+function renderWeek(){
+  var cw=curWeek(),p=phaseFor(cw),plan=weekPlan(cw);
+  $("wkTitle").textContent="Week "+cw;
+  $("wkPhase").outerHTML=phaseChip(p).replace('<span','<span id="wkPhase"');
+  $("wkDates").textContent=fmtDate(weekDate(cw,0))+" to "+fmtDate(weekDate(cw,6));
+  var b="";
+  if(S.announce&&S.announce.from<=cw+1){
+    var a=S.announce;
+    b+='<div class="banner win"><div class="bn-title">'+(a.phase===1?"Sword training unlocked":"Sword phase 2 unlocked")+'</div><div class="bn-text">'+
+      (a.phase===1?"From week "+a.from+", Saturday becomes a sword session. You'll start with grip, stance and the four guards. Check the safety notes before your first one.":
+       "From week "+a.from+", you'll have two sword days, Tuesday and Friday, working on the cuts. Thursday alternates between rowing and intervals.")+
+      '</div><button class="pill" id="bnDismiss">Got it</button></div>';
+  }
+  var pc=pendingCheckin();
+  if(pc){
+    b+='<div class="banner"><div class="bn-title">'+(pc===cw?"End of week check-in":"Check in for week "+pc)+'</div><div class="bn-text">Rate how the week went. It takes ten seconds and decides when the swords come in.</div><button class="pill ember" id="bnCheckin">Check in</button></div>';
+  }
+  $("wkBanners").innerHTML=b;
+  if($("bnDismiss"))$("bnDismiss").addEventListener("click",function(){S.announce=null;save();renderWeek();});
+  if($("bnCheckin"))$("bnCheckin").addEventListener("click",function(){openCheckin(pc);});
+
+  var list=$("dayList");list.innerHTML="";
+  plan.forEach(function(s){
+    var sess=SESS[s.id],btn=document.createElement("button");
+    btn.className="day-card st-"+s.state+(s.rest?" is-rest":"");
+    var meta;
+    if(s.rest)meta="Rest day";
+    else if(s.state==="done")meta="Done";
+    else if(s.state==="missed")meta="Missed";
+    else if(s.state==="pre")meta="Before you started";
+    else meta=(s.state==="today"?"Today, about ":"About ")+estimateMin(sess)+" min";
+    if(s.state==="today"&&s.rest)meta="Today, rest day";
+    var tag=s.sword?'<span class="sword-tag">'+BLADE+sess.full+'</span>':'';
+    btn.innerHTML='<span class="dc-day">'+DAYN[s.i]+'</span><span class="dc-body"><span class="dc-focus">'+esc(sessTitle(sess))+'</span>'+tag+'<br><span class="dc-meta">'+esc(meta)+'</span></span>'+
+      (s.rest?'':'<span class="dc-status'+(s.state==="done"?' done':'')+'" aria-label="'+(s.state==="done"?'Done':'Not done')+'">'+(s.state==="done"?CHECK:'')+'</span>');
+    btn.addEventListener("click",function(){openPreview(sess,s);});
+    list.appendChild(btn);
+  });
+  var dc=doneCount(cw),tot=trainingSlots(cw);
+  $("weekCount").textContent=dc+" of "+tot+" sessions done this week";
+}
+
+/* ---------- Progress ---------- */
+function renderProgress(){
+  var cw=curWeek(),p=phaseFor(cw),e=estimates();
+  $("pgSub").textContent="Week "+cw+", started "+fmtDate(new Date(S.start));
+  var steps=[
+    {n:"Conditioning",d:p===0?"Now, since week 1":"Weeks 1 to "+((e.a1?e.e1:cw)-1),st:p===0?"now":"past"},
+    {n:"Sword phase 1",d:e.a1?(p===1?"Now, since week "+e.e1:"Started week "+e.e1):"Rough estimate: around week "+e.e1,st:p===1?"now":(p>1?"past":"next")},
+    {n:"Sword phase 2",d:e.a2?"Now, since week "+e.e2:"Rough estimate: around week "+e.e2,st:p===2?"now":"next"}
+  ];
+  $("pgTrack").innerHTML=steps.map(function(s){return '<div class="tr-step '+s.st+'"><span class="tr-dot"></span><div><div class="tr-name">'+s.n+'</div><div class="tr-desc">'+esc(s.d)+'</div></div></div>';}).join("");
+  var st=currentStreak();
+  var ex="";
+  if(p<2){
+    ex=st>0?("You're on a run of "+st+" good week"+(st>1?"s":"")+". "+(RULES.streakNeeded-st>0?"One more and you move up.":"")):"Estimates update every week based on your check-ins.";
+  }else ex="You're on the full programme. Keep checking in so you can see how it's going.";
+  $("pgStreak").textContent=ex;
+
+  var last=Math.min(Math.max(cw+3,(p<2?e.e2:cw)+1),cw+12),h='<div class="cal-row cal-head"><span></span>'+DAYN.map(function(d){return '<span>'+d.charAt(0)+'</span>';}).join("")+'<span></span></div>';
+  var prevPh=0;
+  for(var w=1;w<=last;w++){
+    var ph=projectedPhase(w),fut=w>cw;
+    if(ph!==prevPh){h+='<div class="cal-mark p'+ph+'">'+BLADE+PHASE_NAMES[ph]+(fut?" (estimate)":"")+'</div>';prevPh=ph;}
+    var cells="";
+    if(!fut){
+      weekPlan(w).forEach(function(s){
+        var c="c-"+s.state+(s.rest?" c-rest":"")+(s.sword?" c-sword":"");
+        cells+='<span class="cal-c '+c+'" title="'+DAYN[s.i]+": "+esc(SESS[s.id].focus)+'">'+(s.state==="done"?CHECK:(s.sword&&!s.rest?BLADE:""))+'</span>';
+      });
+    }else{
+      var sl=(ph===0?["mon","tue","wed","thu","fri","sat","sun"]:ph===1?["mon","tue","wed","thu","fri",SWORD,"sun"]:["mon",SWORD,"wed","tue",SWORD,"fri","sun"]);
+      sl.forEach(function(id){var r=id==="sun";cells+='<span class="cal-c c-future'+(r?" c-rest":"")+(id===SWORD?" c-sword":"")+'">'+(id===SWORD?BLADE:"")+'</span>';});
+    }
+    var r=W(w).rating,rt="";
+    if(r&&r.skipped)rt='<span class="cal-r dim">skip</span>';
+    else if(r)rt='<span class="cal-r'+(r.q?" good":"")+'">'+(r.score%1?r.score.toFixed(1):r.score)+'★</span>';
+    else rt='<span class="cal-r dim"></span>';
+    h+='<div class="cal-row'+(w===cw?" cur":"")+(fut?" fut":"")+'"><span class="cal-w">'+w+'</span>'+cells+rt+'</div>';
+  }
+  $("pgCal").innerHTML=h;
+}
+
+/* ---------- All sessions ---------- */
+function renderAllSessions(){
+  function fill(el,arr){
+    el.innerHTML="";
+    arr.forEach(function(sess){
+      if(sess.rest)return;
+      var b=document.createElement("button");b.className="day-card";
+      b.innerHTML='<span class="dc-day">'+esc(sess.short)+'</span><span class="dc-body"><span class="dc-focus">'+esc(sess.focus)+'</span><br><span class="dc-meta">About '+estimateMin(sess)+' min</span></span>';
+      b.addEventListener("click",function(){openPreview(sess,null);});
+      el.appendChild(b);
+    });
+  }
+  fill($("allCond"),COND_DAYS);fill($("allSword"),SWORD_DAYS);
+}
+
+/* ---------- Preview ---------- */
+var current=null,currentSlot=null;
+function openPreview(day,slot){
+  current=day;currentSlot=slot;
+  var label=slot?DAYFULL[slot.i]:(isSword(day.id)?day.full:day.full);
+  $("pvTitle").textContent=label+": "+day.focus;
+  $("pvMeta").textContent=day.rest?"Rest day":("About "+estimateMin(day)+" min"+(day.equipment?(", "+day.equipment.charAt(0).toLowerCase()+day.equipment.slice(1)):""));
+  $("pvWhy").textContent=day.why;
+  var list=$("pvList");list.innerHTML="";
+  if(day.rest){
+    list.innerHTML='<p class="rest-msg">No exercises today. A slow walk or light stretching is fine if you feel restless, just don\'t train.</p>';
+    $("pvStartBar").hidden=true;
+  }else{
+    $("pvStartBar").hidden=false;
+    day.plan.forEach(function(item){
+      var ex=LIB[item.ex],row=document.createElement("div");row.className="plan-item";
+      row.innerHTML='<div class="pi-body"><div class="pi-name">'+esc(ex.name)+(item.optional?'<span class="pi-opt">optional</span>':'')+'</div><div class="pi-scheme">'+esc(scheme(item))+'</div></div>';
+      var hb=document.createElement("button");hb.className="how-btn";hb.innerHTML=INFO+"How to";
+      hb.setAttribute("aria-label","How to do "+ex.name);
+      hb.addEventListener("click",function(){openHowto(item.ex,false);});
+      row.appendChild(hb);list.appendChild(row);
+    });
+  }
+  var mk=$("pvMark");
+  if(slot&&!day.rest&&slot.w===curWeek()&&(slot.state!=="future")&&slot.state!=="pre"){
+    mk.hidden=false;mk.textContent=slot.state==="done"?"Mark as not done":"Already did this? Mark it done";
+  }else mk.hidden=true;
+  $("pvSafety").hidden=!isSword(day.id);
+  show("preview");
+}
+$("pvMark").addEventListener("click",function(){
+  if(!currentSlot)return;
+  if(currentSlot.state==="done")unmark(currentSlot.w,currentSlot.i);
+  else markDone(currentSlot.w,currentSlot.i,current.id);
+  renderAll();show("home");
+});
+/* ---------- Voice guide ---------- */
+var VOICE_OK=("speechSynthesis" in window)&&typeof window.SpeechSynthesisUtterance==="function";
+if(S.voice==null)S.voice=true;
+if(S.handsfree==null)S.handsfree=true;
+var ukVoice=null;
+function pickVoice(){
+  if(!VOICE_OK)return;
+  try{
+    var vs=window.speechSynthesis.getVoices()||[];
+    ukVoice=vs.filter(function(v){return /en[-_]GB/i.test(v.lang);})[0]||vs.filter(function(v){return /^en/i.test(v.lang);})[0]||null;
+  }catch(e){}
+}
+if(VOICE_OK){pickVoice();try{window.speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}}
+function say(text,interrupt){
+  if(!VOICE_OK||!S.voice||!text)return;
+  try{
+    if(interrupt)window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text);
+    if(ukVoice)u.voice=ukVoice;
+    u.lang=ukVoice?ukVoice.lang:"en-GB";u.rate=1;u.pitch=1;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function hush(){if(VOICE_OK){try{window.speechSynthesis.cancel();}catch(e){}}}
+function spokenDur(s){
+  s=Math.round(s);if(s<60)return s+" seconds";
+  var m=Math.floor(s/60),r=s%60,t=m+" minute"+(m>1?"s":"");
+  return r?t+" "+r+" seconds":t;
+}
+function repSeconds(text){
+  var t=String(text||"").toLowerCase(),nums=(t.match(/\d+/g)||[]).map(Number),n=nums.length?Math.max.apply(null,nums):10,secs;
+  if(/as long as you can/.test(t))return 30;
+  if(/round/.test(t))secs=n*20;
+  else if(/approach/.test(t))secs=n*6;
+  else secs=n*3;
+  if(/each (side|leg|direction|arm)/.test(t))secs*=2;
+  return Math.max(20,Math.min(150,secs));
+}
+function setWords(st){
+  var p=[];
+  if(st.setTotal>1)p.push("Set "+st.setNo+" of "+st.setTotal);
+  if(st.side)p.push(st.side);
+  return p.length?p.join(", ")+". ":"";
+}
+function amountWords(st){return st.mode==="time"?spokenDur(st.seconds):st.reps;}
+function announce(st){
+  if(st.kind==="rest"){
+    var n=st.next;
+    if(st.label==="Switch sides"){say("Switch sides.",true);return;}
+    if(st.label==="Get ready"&&n){
+      var sets=n.setTotal>1?(n.setTotal+" sets of "+amountWords(n)):amountWords(n),nx=LIB[n.exId],how="";
+      if(n.phase==="Work"&&nx.steps&&nx.steps.length)how=" "+nx.steps.slice(0,2).join(" ");
+      else if(nx.steps)how=" "+nx.steps.join(" ");
+      say("Get ready. Next up, "+n.name+". "+sets+"."+how,true);return;
+    }
+    if(st.label==="Easy pace"){say("Easy pace for "+spokenDur(st.seconds)+". Keep moving.",true);return;}
+    say("Rest, "+spokenDur(st.seconds)+"."+(n?" Up next, "+n.name+(n.setTotal>1?", set "+n.setNo:"")+".":""),true);
+    return;
+  }
+  var ex=LIB[st.exId],txt=st.name+". "+setWords(st);
+  var prev=P&&P.i>0?P.steps[P.i-1]:null,briefed=prev&&prev.kind==="rest"&&prev.label==="Get ready";
+  if(st.side==="Right side"&&prev&&prev.label==="Switch sides")txt="Right side. ";
+  if(st.phase!=="Work"){
+    txt+=spokenDur(st.seconds)+"."+(briefed?"":" "+(ex.steps||[]).join(" "));
+  }else{
+    txt+=amountWords(st)+". ";
+    if(st.mode==="reps")txt+=P&&P.hf?"Go.":"Tap done when you finish.";
+    else txt+="Go.";
+  }
+  say(txt,true);
+}
+/* Mid-step cues, called every tick with the remaining seconds */
+function timeCues(st,rem){
+  if(!P||!P.total)return;
+  var T=P.total,c=P.cues||(P.cues={}),work=st.kind==="work";
+  if(T>=180&&rem<=60&&!c.min){c.min=1;say("One minute left.");}
+  if(work&&T>=20&&rem<=T/2&&!c.half){c.half=1;say("Halfway there.");}
+  if(T>=25&&rem<=10&&!c.ten){c.ten=1;say(work?"Ten seconds left.":"Ten seconds.");}
+}
+function briefingText(day){
+  var names=[];
+  day.plan.forEach(function(item){var n=LIB[item.ex].name;if(names.indexOf(n)<0)names.push(n);});
+  var main=names.filter(function(n){return n!=="Warm-up"&&n!=="Cool-down"&&!/^Cool-down|^Warm-up|stretch/i.test(n);});
+  return day.focus+". About "+estimateMin(day)+" minutes. After the warm-up, you'll do "+
+    (main.length>1?main.slice(0,-1).join(", ")+", and "+main[main.length-1]:main.join(""))+
+    ", then cool down. When you're ready, press begin.";
+}
+/* ---------- Daily reminder (works once installed via the Android app build) ---------- */
+var REMIND_ID=4271;
+if(!S.reminder)S.reminder={on:false,hour:7,minute:0};
+function capNotif(){
+  try{
+    if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()&&window.Capacitor.Plugins&&window.Capacitor.Plugins.LocalNotifications)return window.Capacitor.Plugins.LocalNotifications;
+  }catch(e){}
+  return null;
+}
+function reminderLabel(){
+  var h=S.reminder.hour,m=S.reminder.minute,ap=h<12?"am":"pm",h12=h%12||12;
+  return h12+":"+(m<10?"0":"")+m+ap;
+}
+function applyReminder(){
+  var ln=capNotif();if(!ln)return;
+  ln.cancel({notifications:[{id:REMIND_ID}]}).catch(function(){});
+  if(!S.reminder.on)return;
+  ln.requestPermissions().then(function(res){
+    if(res&&res.display&&res.display!=="granted")return;
+    ln.schedule({notifications:[{
+      id:REMIND_ID,
+      title:"Training time",
+      body:"Today's session is ready when you are.",
+      schedule:{on:{hour:S.reminder.hour,minute:S.reminder.minute},allowWhileIdle:true},
+      smallIcon:"ic_stat_icon"
+    }]}).catch(function(){});
+  }).catch(function(){});
+}
+/* ---------- How-to sheet ---------- */
+var howFromPlayer=false,wasRunning=false;
+function openHowto(exId,fromPlayer){
+  var ex=LIB[exId];
+  $("htName").textContent=ex.name;
+  $("htSteps").innerHTML=ex.steps.map(function(s){return "<li>"+esc(s)+"</li>";}).join("");
+  $("htTips").innerHTML=ex.tips.map(function(s){return "<li>"+esc(s)+"</li>";}).join("");
+  var fb=$("htFig"),fg=FIG[exId];
+  if(fg){
+    var svgs=figureFrames(fg),html="";
+    svgs.forEach(function(sv,k){
+      if(k>0)html+='<svg class="fig-step" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+      html+='<figure>'+sv.replace('role="img"','role="img" aria-label="'+esc(fg.labels[k])+'"')+'<figcaption>'+esc(fg.labels[k])+'</figcaption></figure>';
+    });
+    fb.innerHTML=html;fb.className="fig-row"+(svgs.length===1?" single":"");fb.hidden=false;
+  }else{fb.innerHTML="";fb.hidden=true;}
+  $("htLink").href="https://www.youtube.com/results?search_query="+encodeURIComponent(ex.q);
+  howFromPlayer=fromPlayer;
+  if(fromPlayer&&P){wasRunning=P.running;P.running=false;renderControls();}
+  $("howto").hidden=false;
+}
+function closeHowto(){
+  $("howto").hidden=true;
+  if(howFromPlayer&&P&&wasRunning){P.running=true;P.last=performance.now();renderControls();}
+  howFromPlayer=false;
+}
+document.querySelectorAll("[data-close]").forEach(function(el){
+  el.addEventListener("click",function(){
+    var w=el.getAttribute("data-close");
+    if(w==="howto")closeHowto();else $(w).hidden=true;
+  });
+});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){if(!$("howto").hidden)closeHowto();else if(!$("confirm").hidden)$("confirm").hidden=true;}
+});
+
+/* ---------- Sound and wake lock ---------- */
+var actx=null,wakeLock=null;
+function unlockAudio(){
+  try{if(!actx){var C=window.AudioContext||window.webkitAudioContext;if(C)actx=new C();}if(actx&&actx.state==="suspended")actx.resume();}catch(e){}
+}
+function beep(freq,len){
+  if(!actx)return;
+  try{
+    var o=actx.createOscillator(),g=actx.createGain();
+    o.type="sine";o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.25,actx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+len);
+    o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+len+0.05);
+  }catch(e){}
+  try{if(navigator.vibrate)navigator.vibrate(len>0.3?200:60);}catch(e){}
+}
+function requestWake(){try{if(navigator.wakeLock)navigator.wakeLock.request("screen").then(function(l){wakeLock=l;}).catch(function(){});}catch(e){}}
+function releaseWake(){try{if(wakeLock)wakeLock.release();}catch(e){}wakeLock=null;}
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&P)requestWake();});
+
+/* ---------- Player ---------- */
+var P=null,timer=null;
+function startWorkout(day,slot){
+  unlockAudio();
+  P={day:day,slot:slot||null,steps:buildSteps(day),i:0,running:true,start:Date.now(),last:performance.now(),hf:!!S.handsfree};
+  $("ringFg").style.strokeDasharray=RING_C;
+  show("player");
+  requestWake();
+  enterStep(0);
+  if(!timer)timer=setInterval(tick,200);
+}
+function stopPlayer(){if(timer){clearInterval(timer);timer=null;}releaseWake();hush();P=null;}
+
+function enterStep(i){
+  P.i=i;var st=P.steps[i];
+  P.running=true;P.last=performance.now();
+  P.cues={};P.total=0;
+  if(st.kind==="rest"||st.mode==="time"){P.total=st.seconds;P.remaining=st.seconds;P.whole=Math.ceil(st.seconds);}
+  else if(P.hf){P.total=repSeconds(st.reps);P.remaining=P.total;P.whole=Math.ceil(P.total);P.elapsed=0;}
+  else{P.elapsed=0;}
+  renderStep();
+  announce(st);
+}
+function advance(){if(P.i<P.steps.length-1)enterStep(P.i+1);else finish();}
+function back(){if(P.i>0)enterStep(P.i-1);else enterStep(0);}
+
+function tick(){
+  if(!P)return;
+  var now=performance.now(),dt=(now-P.last)/1000;P.last=now;
+  if(!P.running)return;
+  var st=P.steps[P.i];
+  if(st.kind==="rest"||st.mode==="time"||P.hf){
+    P.remaining-=dt;
+    timeCues(st,P.remaining);
+    var w=Math.ceil(P.remaining);
+    if(w<P.whole){P.whole=w;if(w>=1&&w<=3)beep(660,0.12);}
+    if(P.remaining<=0){beep(880,0.45);advance();return;}
+  }else{P.elapsed+=dt;}
+  renderLive();
+}
+
+function workIndex(){ // counts work steps for the header
+  var total=0,cur=0;
+  P.steps.forEach(function(s,idx){if(s.kind==="work"){total++;if(idx<=P.i)cur=total;}});
+  return {cur:Math.max(cur,1),total:total};
+}
+
+function renderStep(){
+  var st=P.steps[P.i],pl=$("player");
+  var isRest=st.kind==="rest",isReps=!isRest&&st.mode==="reps";
+  pl.classList.toggle("is-rest",isRest);
+  pl.classList.toggle("is-reps",isReps);
+  var wi=workIndex();
+  $("pCount").textContent="Exercise "+wi.cur+" of "+wi.total;
+  $("pBar").style.width=Math.round((P.i/P.steps.length)*100)+"%";
+
+  if(isRest){
+    $("pPhase").textContent=st.label;
+    var n=st.next;
+    $("pName").textContent=n?n.name:"";
+    $("pSet").textContent=n?("Up next"+setText(n)):"";
+    $("pCue").textContent=st.cue||(n?(n.mode==="time"?dur(n.seconds):n.reps):"");
+    $("pExtra").style.visibility="visible";
+  }else{
+    $("pPhase").textContent=st.optional?(st.phase+", optional"):st.phase;
+    $("pName").textContent=st.name;
+    $("pSet").textContent=setText(st).replace(/^, /,"");
+    $("pCue").textContent=isReps?(P.hf?"Timed for you. Tap Done if you finish early.":"Tap Done when you finish the set."):"";
+    $("pExtra").style.visibility="hidden";
+  }
+  var big=$("pBig");
+  if(isReps){big.classList.add("reps");big.textContent=st.reps;if(!P.hf)$("ringFg").style.strokeDashoffset=0;}
+  else{big.classList.remove("reps");}
+  renderLive();renderControls();
+}
+function setText(st){
+  var parts=[];
+  if(st.setTotal>1)parts.push("set "+st.setNo+" of "+st.setTotal);
+  if(st.side)parts.push(st.side.toLowerCase());
+  if(!parts.length)return "";
+  var t=parts.join(", ");
+  return ", "+t;
+}
+function renderLive(){
+  var st=P.steps[P.i];
+  if(st.kind==="rest"||st.mode==="time"){
+    $("pBig").textContent=clock(Math.ceil(Math.max(0,P.remaining)));
+    var frac=P.total?Math.max(0,P.remaining)/P.total:0;
+    $("ringFg").style.strokeDashoffset=RING_C*(1-frac);
+    $("pSmall").textContent=P.running?"":"Paused";
+  }else if(P.hf){
+    $("pSmall").textContent=clock(Math.ceil(Math.max(0,P.remaining)))+(P.running?" left, or tap Done":" paused");
+    $("ringFg").style.strokeDashoffset=RING_C*(1-Math.max(0,P.remaining)/P.total);
+  }else{
+    $("pSmall").textContent=clock(Math.floor(P.elapsed))+(P.running?"":" paused");
+  }
+}
+function renderControls(){
+  if(!P)return;
+  var st=P.steps[P.i],m=$("pMain");
+  if(st.kind==="rest"){m.innerHTML="Skip rest";}
+  else if(st.mode==="reps"){m.innerHTML=CHECK.replace('stroke="#fff"','stroke="currentColor"')+"Done";}
+  else{m.innerHTML=P.running?PAUSE+"Pause":PLAY+"Resume";}
+  renderLive();
+}
+
+$("pMain").addEventListener("click",function(){
+  if(!P)return;unlockAudio();
+  var st=P.steps[P.i];
+  if(st.kind==="rest"||st.mode==="reps"){advance();return;}
+  P.running=!P.running;P.last=performance.now();renderControls();
+  if(P.running)say("Resuming.",true);else say("Paused.",true);
+});
+$("pSkip").addEventListener("click",function(){if(P)advance();});
+$("pPrev").addEventListener("click",function(){if(P)back();});
+$("pAdd").addEventListener("click",function(){
+  if(!P)return;var st=P.steps[P.i];if(st.kind!=="rest")return;
+  P.remaining+=15;P.total=Math.max(P.total,P.remaining);P.whole=Math.ceil(P.remaining);if(P.cues)P.cues.ten=0;renderLive();say("15 more seconds.",true);
+});
+$("pHow").addEventListener("click",function(){
+  if(!P)return;var st=P.steps[P.i];var target=st.kind==="rest"?st.next:st;
+  if(target)openHowto(target.exId,true);
+});
+$("pClose").addEventListener("click",function(){$("confirm").hidden=false;});
+$("cfEnd").addEventListener("click",function(){
+  $("confirm").hidden=true;if(!P)return;var d=P.day,sl=P.slot;stopPlayer();openPreview(d,sl);
+});
+
+/* ---------- Weekly check-in ---------- */
+var CI={w:null,s1:0,s2:0,pain:null};
+function starRow(el,key){
+  el.innerHTML="";
+  for(var n=1;n<=5;n++){(function(n){
+    var b=document.createElement("button");b.className="star";b.innerHTML=STAR;b.setAttribute("aria-label",n+" star"+(n>1?"s":""));
+    b.addEventListener("click",function(){CI[key]=n;paintStars();checkReady();});
+    el.appendChild(b);
+  })(n);}
+}
+function paintStars(){
+  [["ciStars1","s1"],["ciStars2","s2"]].forEach(function(pair){
+    var kids=$(pair[0]).children;for(var i=0;i<kids.length;i++){kids[i].classList.toggle("on",i<CI[pair[1]]);kids[i].setAttribute("aria-pressed",i<CI[pair[1]]?"true":"false");}
+  });
+  document.querySelectorAll("#ciPain button").forEach(function(b){b.setAttribute("aria-pressed",String(CI.pain)===b.getAttribute("data-pain")?"true":"false");});
+}
+function checkReady(){$("ciSave").disabled=!(CI.s1&&CI.s2&&CI.pain!==null);}
+starRow($("ciStars1"),"s1");starRow($("ciStars2"),"s2");
+document.querySelectorAll("#ciPain button").forEach(function(b){b.addEventListener("click",function(){CI.pain=Number(b.getAttribute("data-pain"));paintStars();checkReady();});});
+function openCheckin(w){
+  CI={w:w,s1:0,s2:0,pain:null};
+  var p=phaseFor(w),Q=QUESTIONS[p],dc=doneCount(w),tot=trainingSlots(w);
+  $("ciTitle").textContent="How did week "+w+" go?";
+  $("ciSub").textContent="You did "+dc+" of "+tot+" sessions.";
+  $("ciQ2").textContent=Q.q2;$("ciQ2lo").textContent=Q.lo;$("ciQ2hi").textContent=Q.hi;
+  $("ciForm").hidden=false;$("ciResult").hidden=true;
+  paintStars();checkReady();
+  $("checkin").hidden=false;
+}
+$("ciSave").addEventListener("click",function(){
+  var r=saveCheckin(CI.w,CI.s1,CI.s2,!!CI.pain),t,x;
+  var sc=(r.score%1?r.score.toFixed(1):r.score);
+  $("ciScore").innerHTML=sc+'<span>★</span>';
+  var need=Math.min(RULES.minSessions,r.total);
+  if(r.advanced){
+    t=r.advanced.phase===1?"Swords unlocked":"Phase 2 unlocked";
+    x=r.advanced.phase===1?"Two strong weeks in a row. From week "+r.advanced.from+", Saturday becomes your first sword session.":"You're ready for the cuts. From week "+r.advanced.from+", Tuesday and Friday become sword days.";
+  }else if(r.pain){
+    t="Take it easy";
+    x="With pain in the mix, the schedule stays where it is. Ease off whatever hurts, and if it keeps up, get it checked out.";
+  }else if(r.phase===2){
+    t="Logged";
+    x="You're on the full programme now. Keep it up.";
+  }else if(r.dc<need){
+    t="Thanks";
+    x="You did "+r.dc+" of "+r.total+" sessions. Weeks with at least "+need+" done count toward moving up.";
+  }else if(!r.q){
+    t="Keep going";
+    x="Moving up needs "+RULES.passScore+" stars or more. The sessions will start to feel easier, and when they do, this will catch it.";
+  }else if(r.phase===0&&r.w<RULES.minWeekPhase1){
+    t="Great week";
+    x="Swords can come in from week "+(RULES.minWeekPhase1+1)+" at the earliest, so keep weeks like this coming.";
+  }else if(r.phase===1&&(r.w-phaseStart(r.w)+1)<RULES.minWeeksInPhase1){
+    t="Great week";
+    x="Phase 2 needs at least "+RULES.minWeeksInPhase1+" weeks in phase 1 first. You're on track.";
+  }else{
+    t="Great week";
+    x="One more week like this and you move up.";
+  }
+  $("ciResTitle").textContent=t;$("ciResText").textContent=x;
+  $("ciForm").hidden=true;$("ciResult").hidden=false;
+  renderAll();
+});
+$("ciSkip").addEventListener("click",function(){skipCheckin(CI.w);$("checkin").hidden=true;renderAll();});
+$("ciDone").addEventListener("click",function(){$("checkin").hidden=true;renderAll();});
+
+/* ---------- Settings ---------- */
+var resetArmed=false;
+function renderSettings(){
+  $("setDummy").setAttribute("aria-checked",S.dummy?"true":"false");
+  var p=phaseFor(curWeek());
+  document.querySelectorAll("#setPhase button").forEach(function(b){b.setAttribute("aria-pressed",Number(b.getAttribute("data-p"))===p?"true":"false");});
+  $("setReset").textContent=resetArmed?"Tap again to confirm":"Restart from week 1";
+  var native=!!capNotif();
+  $("setReminder").setAttribute("aria-checked",S.reminder.on?"true":"false");
+  $("remTimeBlock").hidden=!S.reminder.on;
+  var hh=(S.reminder.hour<10?"0":"")+S.reminder.hour,mm=(S.reminder.minute<10?"0":"")+S.reminder.minute;
+  $("remTime").value=hh+":"+mm;
+  $("remDesc").textContent=native?("Sends a notification at "+reminderLabel()+" every day."):"Set your preferred time now. This turns on once you build and install the Android app version, since a browser tab can't send it while closed.";
+}
+$("openSettings").addEventListener("click",function(){resetArmed=false;renderSettings();$("settings").hidden=false;});
+$("setDummy").addEventListener("click",function(){S.dummy=!S.dummy;save();renderSettings();renderAll();});
+$("setReminder").addEventListener("click",function(){S.reminder.on=!S.reminder.on;save();renderSettings();applyReminder();});
+$("remTime").addEventListener("change",function(){
+  var parts=$("remTime").value.split(":");if(parts.length!==2)return;
+  S.reminder.hour=Number(parts[0]);S.reminder.minute=Number(parts[1]);save();renderSettings();applyReminder();
+});
+document.querySelectorAll("#setPhase button").forEach(function(b){b.addEventListener("click",function(){
+  setPhase(Number(b.getAttribute("data-p")),curWeek());S.announce=null;save();renderSettings();renderAll();
+});});
+$("setReset").addEventListener("click",function(){
+  if(!resetArmed){resetArmed=true;renderSettings();return;}
+  S=freshState();save();resetArmed=false;$("settings").hidden=true;if(capNotif())applyReminder();
+setTab("week");
+});
+
+/* ---------- Finishing a session ---------- */
+function finish(){
+  var day=P.day,slot=P.slot,mins=Math.max(1,Math.round((Date.now()-P.start)/60000)),cw=curWeek(),ticked=null;
+  beep(990,0.6);stopPlayer();
+  say("Session complete. Nice work.",true);
+  if(slot&&slot.w===cw&&slot.state!=="done"){markDone(slot.w,slot.i,day.id);ticked=slot.i;}
+  else if(!slot){
+    var ts=weekPlan(cw)[todayIdx()];
+    if(ts&&ts.id===day.id&&ts.state==="today"){markDone(cw,ts.i,day.id);ticked=ts.i;}
+  }
+  $("doneTitle").textContent=day.focus+" done";
+  var txt="That took "+mins+" min.";
+  if(ticked!==null)txt+=" Ticked off for "+DAYFULL[ticked]+", week "+cw+".";
+  var tot=trainingSlots(cw),dc=doneCount(cw);
+  txt+=dc>=tot?" That's the whole week done!":" Rest up and drink some water.";
+  $("doneText").textContent=txt;
+  var pc=pendingCheckin();$("doneCheckin").hidden=!pc;
+  show("done");
+}
+$("doneCheckin").addEventListener("click",function(){renderAll();show("home");var pc=pendingCheckin();if(pc)openCheckin(pc);});
+$("pvBack").addEventListener("click",function(){renderAll();show("home");});
+$("pvStart").addEventListener("click",function(){if(current&&!current.rest)openBrief(current,currentSlot);});
+
+/* ---------- Briefing before a session ---------- */
+function paintBriefToggles(){
+  $("brVoice").setAttribute("aria-checked",S.voice?"true":"false");
+  $("brHands").setAttribute("aria-checked",S.handsfree?"true":"false");
+  $("pVoice").setAttribute("aria-pressed",S.voice?"true":"false");
+  $("pVoice").innerHTML=S.voice?SPK_ON:SPK_OFF;
+  $("pVoice").setAttribute("aria-label",S.voice?"Mute voice guide":"Turn voice guide on");
+}
+function openBrief(day,slot){
+  $("brTitle").textContent=day.focus;
+  $("brMeta").textContent="About "+estimateMin(day)+" min";
+  var names=[],h="";
+  day.plan.forEach(function(item){var ex=LIB[item.ex];h+='<li><span>'+esc(ex.name)+'</span><span class="br-s">'+esc(scheme(item))+'</span></li>';});
+  $("brList").innerHTML=h;
+  $("brNoVoice").hidden=VOICE_OK;
+  $("brVoiceRow").hidden=!VOICE_OK;
+  paintBriefToggles();
+  $("brBegin").onclick=function(){unlockAudio();startWorkout(day,slot);};
+  $("brBack").onclick=function(){hush();show("preview");};
+  show("brief");
+  unlockAudio();
+  say(briefingText(day),true);
+}
+$("brVoice").addEventListener("click",function(){S.voice=!S.voice;save();paintBriefToggles();if(!S.voice)hush();else say("Voice guide on.",true);});
+$("brHands").addEventListener("click",function(){S.handsfree=!S.handsfree;save();paintBriefToggles();});
+$("pVoice").addEventListener("click",function(){S.voice=!S.voice;save();paintBriefToggles();if(!S.voice)hush();else say("Voice guide on.",true);});
+$("doneBack").addEventListener("click",function(){renderAll();show("home");});
+
+/* Roll over to a new day or week while the app stays open */
+var lastDay=new Date().toDateString();
+setInterval(function(){var d=new Date().toDateString();if(d!==lastDay){lastDay=d;if(!P)renderAll();}},60000);
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&!P)renderAll();});
+
+if(capNotif())applyReminder();
+setTab("week");
+
+})();
 </script>
 </body>
 </html>
