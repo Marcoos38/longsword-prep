@@ -2,7 +2,7 @@
   Offline support. Bump CACHE_VERSION whenever you change files, and add any
   new page (for example sword.html) to APP_FILES so it works offline too.
 */
-const CACHE_VERSION = "v5";
+const CACHE_VERSION = "v6";
 const CACHE = "longsword-prep-" + CACHE_VERSION;
 const APP_FILES = [
   "./",
@@ -10,7 +10,8 @@ const APP_FILES = [
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",
-  "./apple-touch-icon.png"
+  "./apple-touch-icon.png",
+  "./icon-maskable-512.png"
 ];
 /*
   Conditioning and sword training are now one page (index.html), with
