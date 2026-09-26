@@ -3384,20 +3384,27 @@ function renderStats(){
   }).join("");
 }
 /* ---------- Voice guide ---------- */
-var VOICE_OK=("speechSynthesis" in window)&&typeof window.SpeechSynthesisUtterance==="function";
+function nativeTTS(){try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()&&c.Plugins&&c.Plugins.TextToSpeech)return c.Plugins.TextToSpeech;}catch(e){}return null;}
+var TTS=nativeTTS();
+var VOICE_OK=!!TTS||(("speechSynthesis" in window)&&typeof window.SpeechSynthesisUtterance==="function");
 if(S.voice==null)S.voice=true;
 if(S.handsfree==null)S.handsfree=true;
 var ukVoice=null;
 function pickVoice(){
-  if(!VOICE_OK)return;
+  if(!VOICE_OK||TTS)return;
   try{
     var vs=window.speechSynthesis.getVoices()||[];
     ukVoice=vs.filter(function(v){return /en[-_]GB/i.test(v.lang);})[0]||vs.filter(function(v){return /^en/i.test(v.lang);})[0]||null;
   }catch(e){}
 }
-if(VOICE_OK){pickVoice();try{window.speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}}
+if(VOICE_OK&&!TTS){pickVoice();try{window.speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}}
 function say(text,interrupt){
   if(!VOICE_OK||!S.voice||!text)return;
+  if(TTS){
+    var go=function(){return TTS.speak({text:text,lang:"en-GB",rate:1.0,pitch:1.0,volume:1.0,queueStrategy:interrupt?0:1}).catch(function(){});};
+    if(interrupt)TTS.stop().catch(function(){}).then(go);else go();
+    return;
+  }
   try{
     if(interrupt)window.speechSynthesis.cancel();
     var u=new SpeechSynthesisUtterance(text);
@@ -3406,7 +3413,7 @@ function say(text,interrupt){
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
-function hush(){if(VOICE_OK){try{window.speechSynthesis.cancel();}catch(e){}}}
+function hush(){if(TTS){TTS.stop().catch(function(){});return;}if(VOICE_OK){try{window.speechSynthesis.cancel();}catch(e){}}}
 function spokenDur(s){
   s=Math.round(s);if(s<60)return s+" seconds";
   var m=Math.floor(s/60),r=s%60,t=m+" minute"+(m>1?"s":"");
@@ -3515,8 +3522,7 @@ function applyReminder(){
       id:REMIND_ID,
       title:"Training time",
       body:"Today's session is ready when you are.",
-      schedule:{on:{hour:S.reminder.hour,minute:S.reminder.minute},allowWhileIdle:true},
-      smallIcon:"ic_stat_icon"
+      schedule:{on:{hour:S.reminder.hour,minute:S.reminder.minute},allowWhileIdle:true}
     }]}).catch(function(){});
   }).catch(function(){});
 }
@@ -4073,6 +4079,14 @@ $("bkSave").addEventListener("click",function(){
     try{var u=URL.createObjectURL(new Blob([data],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},4000);bkMsg("Backup downloaded.");}
     catch(e){bkMsg("This browser wouldn\u2019t save the file.",true);}
   };
+  var cap=window.Capacitor;
+  if(cap&&cap.isNativePlatform&&cap.isNativePlatform()&&cap.Plugins&&cap.Plugins.Filesystem&&cap.Plugins.Share){
+    cap.Plugins.Filesystem.writeFile({path:name,data:data,directory:"CACHE",encoding:"utf8"})
+      .then(function(r){return cap.Plugins.Share.share({title:"Longsword Prep backup",url:r.uri,dialogTitle:"Save your backup"});})
+      .then(function(){bkMsg("Backup ready. Save it somewhere safe, like Google Drive or your Downloads folder.");})
+      .catch(function(e){if(/cancel/i.test(String(e&&(e.message||e))))bkMsg("");else bkMsg("Couldn\u2019t save the backup just now. Try again in a moment.",true);});
+    return;
+  }
   var use=window.claude&&typeof window.claude.use==="function"?window.claude.use("downloads"):Promise.resolve(null);
   use.then(function(dl){
     if(!dl){fallback();return;}

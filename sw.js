@@ -2,7 +2,7 @@
   Offline support. Bump CACHE_VERSION whenever you change files, and add any
   new page (for example sword.html) to APP_FILES so it works offline too.
 */
-const CACHE_VERSION = "v6";
+const CACHE_VERSION = "v7";
 const CACHE = "longsword-prep-" + CACHE_VERSION;
 const APP_FILES = [
   "./",
